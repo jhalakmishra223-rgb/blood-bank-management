@@ -1,0 +1,1025 @@
+/* ==========================================================================
+   BLOODBRIDGE - MASTER CONSOLIDATED DESIGN SYSTEM & GLOBAL STYLESHEET
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS & SYSTEM VARIABLES
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand Red Palette */
+  --bb-red: #dc3545;
+  --bb-red-hover: #b91c1c;
+  --bb-red-dark: #8b0000;
+  --bb-red-deep: #700000;
+  --bb-red-light: #fef2f2;
+  --bb-soft-bg: #fff5f5;
+  --bb-primary-glow: rgba(220, 53, 69, 0.25);
+
+  /* Blood Bag Graphic Specifics */
+  --blood-primary: var(--bb-red);
+  --blood-dark: var(--bb-red-dark);
+  --blood-light: #ff6b6b;
+  --bag-border: #212529;
+
+  /* Surface & Background Colors */
+  --bb-dark-bg: #0f172a;
+  --bb-dark-card: #1e293b;
+  --bb-surface-main: #f8fafc;
+  --bb-surface-card: #ffffff;
+  --bb-surface-gray: #f4f6f8;
+  --bb-border-subtle: #e2e8f0;
+  --bb-card-border: rgba(220, 53, 69, 0.18);
+
+  /* Typography Colors */
+  --bb-text-main: #0f172a;
+  --bb-text-muted: #64748b;
+  --bb-text-light: #94a3b8;
+
+  /* Status Colors */
+  --bb-success: #16a34a;
+  --bb-success-bg: #f0fdf4;
+  --bb-warning: #d97706;
+  --bb-warning-bg: #fffbeb;
+  --bb-info: #0284c7;
+  --bb-info-bg: #f0f9ff;
+
+  /* Fonts */
+  --bb-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --bb-font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+
+  /* Radii */
+  --bb-radius-sm: 8px;
+  --bb-radius-md: 14px;
+  --bb-radius-lg: 20px;
+  --bb-radius-pill: 9999px;
+
+  /* Elevation Shadows */
+  --bb-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --bb-shadow-subtle: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  --bb-shadow-hover: 0 12px 30px -4px rgba(15, 23, 42, 0.12);
+  --bb-shadow-glow: 0 8px 25px -3px var(--bb-primary-glow);
+
+  /* Transitions */
+  --bb-transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL BASE STYLES & UTILITIES
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--bb-font-sans);
+  color: var(--bb-text-main);
+  background-color: var(--bb-surface-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bg-page-body {
+  background: linear-gradient(180deg, rgba(220, 53, 69, 0.04) 0%, #ffffff 25%, rgba(220, 53, 69, 0.02) 100%);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: var(--bb-font-display);
+  font-weight: 700;
+  color: var(--bb-text-main);
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--bb-red);
+  transition: var(--bb-transition);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--bb-red-hover);
+}
+
+.text-brand-red { color: var(--bb-red) !important; }
+.bg-brand-red { background-color: var(--bb-red) !important; }
+
+.badge-brand-subtle {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  color: var(--bb-red) !important;
+}
+
+.max-w-600 { max-width: 600px; }
+.max-w-650 { max-width: 650px; }
+.max-w-700 { max-width: 700px; }
+.tracking-wider { letter-spacing: 1px; font-size: 0.8rem; }
+
+/* Navigation Utilities */
+.custom-navbar {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid var(--bb-border-subtle);
+  transition: var(--bb-transition);
+}
+
+.brand-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  transition: var(--bb-transition);
+}
+
+.nav-link {
+  transition: var(--bb-transition);
+}
+
+.nav-link:hover {
+  color: var(--bb-red) !important;
+}
+
+/* Section Pill Badges */
+.section-badge, .hero-badge, .hero-pill-badge {
+  background-color: #ffffff !important;
+  color: var(--bb-red) !important;
+  border: 1px solid var(--bb-card-border) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--bb-radius-pill);
+  box-shadow: var(--bb-shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   3. REUSABLE CARD SYSTEM & SERVICES CARDS
+   -------------------------------------------------------------------------- */
+.bb-card, .ui-card, .service-card, .feature-card {
+  background: var(--bb-surface-card) !important;
+  border: 1px solid var(--bb-border-subtle) !important;
+  border-radius: var(--bb-radius-md) !important;
+  box-shadow: var(--bb-shadow-subtle) !important;
+  transition: var(--bb-transition) !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.bb-card:hover, .ui-card:hover, .service-card:hover, .feature-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: var(--bb-red) !important;
+  box-shadow: 0 12px 24px rgba(220, 53, 69, 0.12) !important;
+}
+
+/* Card Accent Bar */
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--bb-surface-gray);
+  transition: background 0.3s ease;
+}
+
+.service-card:hover::before {
+  background: var(--bb-red);
+}
+
+/* Card Header/Body/Footer */
+.bb-card-header {
+  padding: 1.25rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--bb-border-subtle);
+}
+
+.bb-card-body {
+  padding: 1.5rem;
+}
+
+.bb-card-footer {
+  padding: 1rem 1.5rem;
+  background-color: var(--bb-surface-main);
+  border-top: 1px solid var(--bb-border-subtle);
+}
+
+/* Card Specialized Utilities */
+.hover-lift {
+  transition: var(--bb-transition);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 1rem 2.5rem rgba(220, 53, 69, 0.15) !important;
+}
+
+.card-impact-highlight {
+  background: linear-gradient(145deg, #ffffff, rgba(220, 53, 69, 0.05));
+  border: 1px solid var(--bb-card-border) !important;
+}
+
+.card-step-box {
+  background: #ffffff;
+  border: 1px solid var(--bb-border-subtle);
+  border-top: 4px solid var(--bb-red) !important;
+}
+
+.card-action-banner {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(220, 53, 69, 0.04) 100%);
+  border: 1px solid var(--bb-card-border) !important;
+}
+
+.card-cta-gradient {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.06) 0%, #ffffff 100%);
+  border: 1px solid var(--bb-card-border) !important;
+}
+
+/* Icon Wrappers for Cards */
+.icon-wrapper, .card-icon-circle, .feature-icon-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: var(--bb-soft-bg);
+  border: 1px solid rgba(220, 53, 69, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bb-red);
+  font-size: 1.8rem;
+  margin: 0 auto;
+  transition: var(--bb-transition);
+}
+
+.service-card:hover .icon-wrapper,
+.ui-card:hover .card-icon-circle,
+.feature-card:hover .feature-icon-circle {
+  transform: scale(1.08) rotate(4deg);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.25);
+  background-color: var(--bb-red) !important;
+  color: #ffffff !important;
+  border-color: var(--bb-red);
+}
+
+/* Card Action Buttons */
+.service-card-btn {
+  transition: var(--bb-transition);
+  border-color: var(--bb-red);
+  color: var(--bb-red);
+}
+
+.service-card:hover .service-card-btn {
+  background-color: var(--bb-red);
+  color: #ffffff !important;
+}
+
+.service-card-btn .btn-arrow {
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.service-card:hover .service-card-btn .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* --------------------------------------------------------------------------
+   4. HERO & CAROUSEL COMPONENTS
+   -------------------------------------------------------------------------- */
+.bb-hero-wrapper {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #fff0f1 100%);
+  padding: 3.5rem 0 4.5rem;
+  overflow: hidden;
+}
+
+.hero-gradient-bg,
+.cta-gradient-banner {
+  background: linear-gradient(135deg, var(--bb-red-dark) 0%, var(--bb-red) 50%, var(--bb-red-deep) 100%) !important;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-gradient-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.hero-title-bold, .hero-title {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+}
+
+.bb-text-glow {
+  color: var(--bb-red);
+  text-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+}
+
+/* Floating BG Drops for Hero */
+.hero-bg-drops .bg-drop {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.08);
+  font-size: 2rem;
+  animation: floatSoft 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero-bg-drops .drop-1 { top: 15%; left: 8%; animation-delay: 0s; font-size: 2.5rem; }
+.hero-bg-drops .drop-2 { top: 65%; left: 12%; animation-delay: 2s; font-size: 1.5rem; }
+.hero-bg-drops .drop-3 { top: 25%; right: 10%; animation-delay: 4s; font-size: 3rem; }
+.hero-bg-drops .drop-4 { top: 75%; right: 15%; animation-delay: 1s; font-size: 2rem; }
+
+/* Carousel Section */
+.bb-carousel-container {
+  position: relative;
+  border-radius: 1.5rem;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--bb-card-border);
+  box-shadow: 0 20px 40px rgba(220, 53, 69, 0.12);
+}
+
+.bb-carousel-inner {
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+.bb-carousel-item {
+  height: 380px;
+  position: relative;
+}
+
+.bb-carousel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.88) contrast(1.05);
+  transition: transform 6s ease;
+}
+
+.carousel-item.active .bb-carousel-img {
+  transform: scale(1.08);
+}
+
+.bb-carousel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(30, 41, 59, 0.85) 0%, rgba(30, 41, 59, 0.2) 60%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+.bb-carousel-badge {
+  background: var(--bb-red);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--bb-radius-pill);
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* Floating Glass Cards */
+.bb-float-card {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--bb-card-border);
+  padding: 0.85rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  animation: floatSoft 4s ease-in-out infinite;
+}
+
+.float-top-left { top: -15px; left: -20px; }
+.float-bottom-right { bottom: -15px; right: -15px; animation-delay: 2s; }
+
+/* --------------------------------------------------------------------------
+   5. FORM CONTROLS & BUTTONS
+   -------------------------------------------------------------------------- */
+.form-control, .form-select {
+  border-radius: var(--bb-radius-sm);
+  border: 1.5px solid var(--bb-border-subtle);
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  transition: var(--bb-transition);
+  background-color: #ffffff;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--bb-red);
+  box-shadow: 0 0 0 0.25rem var(--bb-primary-glow);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--bb-text-main);
+  margin-bottom: 0.4rem;
+}
+
+/* Button System */
+.btn {
+  font-family: var(--bb-font-display);
+  font-weight: 600;
+  border-radius: var(--bb-radius-pill);
+  padding: 0.6rem 1.35rem;
+  transition: var(--bb-transition);
+}
+
+.btn-danger, .btn-primary-bb, .btn-bb-red, .bottom-cta-btn-danger {
+  background: linear-gradient(135deg, var(--bb-red) 0%, var(--bb-red-hover) 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  box-shadow: var(--bb-shadow-glow) !important;
+}
+
+.btn-danger:hover, .btn-primary-bb:hover, .btn-bb-red:hover, .bottom-cta-btn-danger:hover {
+  background: var(--bb-red-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -2px var(--bb-primary-glow) !important;
+}
+
+.btn-bb-white, .hero-btn-white {
+  background-color: #ffffff !important;
+  color: var(--bb-red) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  padding: 0.6rem 1.5rem;
+  box-shadow: var(--bb-shadow-sm);
+  font-weight: 700 !important;
+}
+
+.btn-bb-white:hover, .hero-btn-white:hover {
+  color: var(--bb-red-dark) !important;
+  background-color: #f8f9fa !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-bb-outline, .hero-btn-outline, .bottom-cta-btn-outline {
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  padding: 0.6rem 1.5rem;
+  font-weight: 700 !important;
+}
+
+.btn-bb-outline:hover, .hero-btn-outline:hover, .bottom-cta-btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.hero-btn, .emergency-btn, .cta-btn {
+  transition: var(--bb-transition);
+}
+
+.hero-btn:hover, .emergency-btn:hover, .cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. STATS, PROCESS, BADGES & CTA
+   -------------------------------------------------------------------------- */
+.stat-card {
+  background: #ffffff;
+  border: 1px solid var(--bb-border-subtle);
+  border-radius: 1.25rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(220, 53, 69, 0.05);
+  transition: var(--bb-transition);
+  height: 100%;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 36px rgba(220, 53, 69, 0.15);
+  border-color: var(--bb-card-border);
+}
+
+.stat-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background: var(--bb-soft-bg);
+  color: var(--bb-red);
+  border-radius: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  transition: var(--bb-transition);
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  background: var(--bb-red);
+  color: #ffffff;
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Process Cards & Flow */
+.process-card {
+  background: #ffffff !important;
+  border-radius: 1.25rem !important;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--bb-border-subtle) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03) !important;
+  position: relative;
+  height: 100%;
+  transition: var(--bb-transition);
+}
+
+.process-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--bb-red) !important;
+  box-shadow: 0 14px 28px rgba(220, 53, 69, 0.12) !important;
+}
+
+.step-number-badge, .process-step-num {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.step-circle, .process-icon-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: var(--bb-red);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Status Badges */
+.bb-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35em 0.8em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--bb-radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bb-badge-danger { background-color: var(--bb-red-light); color: var(--bb-red-dark); }
+.bb-badge-success { background-color: var(--bb-success-bg); color: var(--bb-success); }
+.bb-badge-warning { background-color: var(--bb-warning-bg); color: var(--bb-warning); }
+
+.blood-group-badge, .blood-type-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--bb-soft-bg);
+  color: var(--bb-red);
+  border: 2px solid rgba(220, 53, 69, 0.2);
+  font-family: var(--bb-font-display);
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: var(--bb-transition);
+}
+
+.blood-card:hover .blood-type-badge {
+  background: var(--bb-red);
+  color: #ffffff;
+  border-color: var(--bb-red);
+  transform: scale(1.1);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--bb-radius-pill);
+}
+
+.badge-available {
+  background-color: rgba(22, 163, 74, 0.1);
+  color: var(--bb-success);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+.badge-low {
+  background-color: rgba(217, 119, 6, 0.15);
+  color: var(--bb-warning);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.badge-out {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--bb-red);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+/* Emergency Banner */
+.bb-emergency-banner, .emergency-banner {
+  background: linear-gradient(135deg, var(--bb-red-dark) 0%, var(--bb-dark-bg) 100%) !important;
+  border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(179, 0, 0, 0.2);
+}
+
+.emergency-bg-icon {
+  right: -20px;
+  bottom: -40px;
+  font-size: 14rem;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+/* Refined Bottom CTA Section */
+.bottom-cta-card, .cta-card-wrapper {
+  background: var(--bb-surface-main) !important;
+  border: 1px solid var(--bb-border-subtle) !important;
+  border-radius: var(--bb-radius-lg) !important;
+  box-shadow: var(--bb-shadow-subtle) !important;
+}
+
+.bottom-cta-heart, .cta-heart-wrapper {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: var(--bb-soft-bg);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bb-red);
+  font-size: 2rem;
+  margin: 0 auto 1.25rem auto;
+}
+
+/* --------------------------------------------------------------------------
+   7. BLOOD GROUP INVENTORY CARD & ANIMATED BLOOD BAG
+   -------------------------------------------------------------------------- */
+.inventory-card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+  background: #ffffff;
+}
+
+.inventory-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(220, 53, 69, 0.15) !important;
+}
+
+.inventory-card:hover .blood-bag-container {
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.08), 0 0 12px rgba(220, 53, 69, 0.35);
+}
+
+.inventory-card:hover .wave-surface {
+  animation-duration: 1.2s;
+}
+
+.blood-bag-wrapper {
+  position: relative;
+  width: 110px;
+  height: 155px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bag-hanger-hook {
+  width: 18px;
+  height: 10px;
+  border: 2px solid var(--bag-border);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  z-index: 2;
+}
+
+.bag-drip-tube {
+  position: relative;
+  width: 4px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-top: none;
+}
+
+.falling-drop {
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  background: var(--blood-primary);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  filter: drop-shadow(0 2px 2px rgba(139, 0, 0, 0.3));
+  animation: dropFallCycle 5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.falling-drop.d1 { animation-delay: 0s; }
+.falling-drop.d2 { animation-delay: 1.2s; }
+.falling-drop.d3 { animation-delay: 2.4s; }
+
+.blood-bag-container {
+  position: relative;
+  width: 92px;
+  height: 118px;
+  border: 3px solid var(--bag-border);
+  border-radius: 12px 12px 22px 22px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.blood-bag-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6px;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.bag-label {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid var(--bag-border);
+  border-radius: 4px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.blood-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, var(--blood-light) 0%, var(--blood-primary) 35%, var(--blood-dark) 100%);
+  width: 100%;
+  z-index: 2;
+}
+
+.blood-liquid.step-filling-bag {
+  animation: fillFromEmptyToHalf 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wave-surface {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 200%;
+  height: 10px;
+  background: repeating-linear-gradient(90deg, var(--blood-light) 0px, var(--blood-primary) 12px, var(--blood-light) 24px);
+  border-radius: 40%;
+  animation: waveMovement 2s infinite linear;
+}
+
+/* --------------------------------------------------------------------------
+   8. TABLES & DATA WIDGETS
+   -------------------------------------------------------------------------- */
+.table-custom {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-custom th {
+  background-color: var(--bb-surface-main);
+  color: var(--bb-text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--bb-border-subtle);
+}
+
+.table-custom td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--bb-border-subtle);
+  vertical-align: middle;
+}
+
+/* --------------------------------------------------------------------------
+   9. FOOTER STYLING
+   -------------------------------------------------------------------------- */
+.bb-footer {
+  background-color: var(--bb-dark-bg);
+  color: var(--bb-text-light);
+}
+
+.bb-footer h5 {
+  color: #ffffff;
+}
+
+.footer-links a {
+  color: var(--bb-text-light);
+  transition: var(--bb-transition);
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.social-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--bb-transition);
+}
+
+.social-icon-btn:hover {
+  background: var(--bb-red);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   10. UNIFIED ANIMATIONS & RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+@keyframes dropPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(220,53,69,0)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 6px rgba(220,53,69,0.4)); }
+}
+
+@keyframes iconTilt {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+
+@keyframes iconHeartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.12); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.12); }
+  70% { transform: scale(1); }
+}
+
+@keyframes waveMovement {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes dropFallCycle {
+  0% { top: 0; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Animation Utility Classes */
+.float-anim { animation: floatSoft 4s ease-in-out infinite; }
+.pulse-drop, .pulse-slow { animation: dropPulse 2.5s ease-in-out infinite; display: inline-block; }
+.pulse-fast { animation: dropPulse 1.2s ease-in-out infinite; display: inline-block; }
+.pulse-heart-large { animation: iconHeartbeat 1.6s ease-in-out infinite; display: inline-block; }
+
+.icon-anim-droplet i { animation: dropPulse 2.5s infinite ease-in-out; }
+.icon-anim-request i { animation: iconTilt 3s infinite ease-in-out; }
+.icon-anim-inventory i { animation: floatSoft 3s infinite ease-in-out; }
+.icon-anim-profile i { animation: iconHeartbeat 1.8s infinite ease-in-out; }
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .services-page .hero-section-red { text-align: center; }
+  .emergency-bg-icon { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   11. SERVICES PAGE SPECIFIC STYLES
+   -------------------------------------------------------------------------- */
+.services-page {
+  font-family: var(--bb-font-sans);
+}
+
+/* Red Hero Styling */
+.services-page .hero-section-red {
+  background-color: var(--bb-red-dark) !important;
+  background: linear-gradient(135deg, var(--bb-red-deep) 0%, #a80c0c 50%, var(--bb-red) 100%) !important;
+  border-bottom: 3px solid #500000;
+  padding: 2.75rem 0 !important;
+  color: #ffffff !important;
+}
+
+/* Animated Hero Vector Container */
+.services-page .hero-anim-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--bb-radius-lg);
+  backdrop-filter: blur(8px);
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Static Cards with High-Contrast Border Accent */
+.services-page .ui-card {
+  border: 2px solid #111111 !important;
+  border-radius: 16px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.services-page .ui-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #a80c0c, var(--bb-red));
+}
+
+.services-page .ui-card:hover {
+  border-color: #a80c0c !important;
+  box-shadow: 0 10px 25px rgba(168, 12, 12, 0.2) !important;
+}
+
+.services-page .card-icon-circle {
+  width: 62px;
+  height: 62px;
+  border: 2px solid #111111;
+  background-color: var(--bb-soft-bg);
+  color: #a80c0c;
+  font-size: 1.6rem;
+}
+
+.services-page .ui-card:hover .card-icon-circle {
+  background-color: #a80c0c !important;
+  color: #ffffff !important;
+  border-color: #a80c0c;
+}
+
+/* Urgent Emergency Banner */
+.services-page .emergency-banner-box {
+  background: linear-gradient(135deg, #600000 0%, #a80c0c 60%, var(--bb-red) 100%) !important;
+  border: 2px solid #111111 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Bottom CTA Specifics */
+.services-page .bottom-cta-card {
+  border: 2px solid #111111 !important;
+  border-radius: 20px !important;
+}
+
+.services-page .bottom-cta-heart {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: var(--bb-soft-bg);
+  border: 2px solid var(--bb-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bb-red);
+  font-size: 1.8rem;
+  margin: 0 auto 1.25rem auto;
+}

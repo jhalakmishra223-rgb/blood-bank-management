@@ -1,0 +1,1167 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+  /* ==========================================================================
+     Global Theme Uniformity & Reset Helpers
+     ========================================================================== */
+  .bb-float-card,
+  .stat-card,
+  .blood-card,
+  .process-card,
+  .card,
+  .benefit-card,
+  .eligibility-container,
+  .eligibility-item {
+    background-color: #ffffff !important;
+    border: 3px solid #000000 !important; /* Broad black border across all cards */
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  /* ==========================================================================
+     Hero Section Styling & Font Size Upgrades
+     ========================================================================== */
+  .bb-hero-section {
+    background: linear-gradient(135deg, #b30000 0%, #7a0000 100%);
+    color: #ffffff;
+    padding: 90px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-display-title {
+    font-size: 3.75rem !important;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+
+  .bb-text-glow {
+    color: #ff3333;
+    text-shadow: 0 0 12px rgba(255, 51, 51, 0.6);
+  }
+
+  .hero-subtitle {
+    font-size: 1.35rem !important;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+  }
+
+  .hero-badge-pill {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 1rem !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* ==========================================================================
+     Buttons with Black Borders & Larger Text
+     ========================================================================== */
+  .btn-bb-red,
+  .btn-bb-white,
+  .btn-bb-outline,
+  .btn-inventory {
+    font-size: 1.1rem !important;
+    padding: 12px 28px !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-bb-red {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border: 2px solid #000000 !important;
+  }
+
+  .btn-bb-red:hover {
+    background-color: #bb2d3b !important;
+    color: #ffffff !important;
+  }
+
+  .btn-bb-white {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+  }
+
+  .btn-bb-white:hover {
+    background-color: #f8f9fa !important;
+    color: #000000 !important;
+  }
+
+  .btn-bb-outline {
+    background: transparent !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+  }
+
+  .btn-bb-outline:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+  }
+
+  .btn-inventory {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    border: 2px solid #000000 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-inventory:hover {
+    background-color: #212529 !important;
+    color: #ffffff !important;
+  }
+
+  .btn-inventory i, 
+  .btn-inventory svg {
+    color: inherit !important;
+  }
+
+  /* ==========================================================================
+     Cards Specific Adjustments
+     ========================================================================== */
+  .bb-float-card {
+    position: absolute;
+    z-index: 10;
+    padding: 12px 20px;
+  }
+
+  .float-top-left {
+    top: 20px;
+    left: -10px;
+  }
+
+  .float-bottom-right {
+    bottom: 20px;
+    right: -10px;
+  }
+
+  .stat-card {
+    padding: 28px;
+    height: 100%;
+  }
+
+  .stat-icon-wrapper,
+  .benefit-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+  }
+
+  .benefit-card {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .eligibility-container {
+    padding: 40px;
+  }
+
+  .eligibility-item {
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+  }
+
+  /* ==========================================================================
+     Banner Styling
+     ========================================================================== */
+  .bb-emergency-banner,
+  .urgent-banner {
+    background: linear-gradient(135deg, #700000 0%, #1a0810 100%);
+    border: 3px solid #000000 !important;
+    border-radius: 20px !important;
+    padding: 48px 44px !important;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  .urgent-banner .banner-title {
+    font-size: 2.25rem !important;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .urgent-banner .banner-subtitle {
+    font-size: 1.1rem !important;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  /* Responsive Font Scaling */
+  @media (max-width: 768px) {
+    .hero-display-title {
+      font-size: 2.5rem !important;
+    }
+    .hero-subtitle {
+      font-size: 1.15rem !important;
+    }
+  }
+  /* Replace or append to your existing <style> block */
+
+/* 1. Page Background Upgrade */
+body {
+  background-color: #f8f9fa;
+  background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+  background-size: 24px 24px; /* Subtle grid texture */
+}
+
+/* 2. Enhanced Card Brutalism with Depth */
+.bb-float-card,
+.stat-card,
+.blood-card,
+.process-card,
+.card,
+.benefit-card,
+.eligibility-container,
+.eligibility-item {
+  background-color: #ffffff !important;
+  border: 3px solid #000000 !important;
+  border-radius: 16px !important;
+  box-shadow: 5px 5px 0px #000000 !important; /* Bold solid drop shadow */
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* 3. Dynamic Card Hover Effects */
+.stat-card:hover,
+.benefit-card:hover,
+.process-card:hover,
+.blood-card:hover {
+  transform: translateY(-5px) translateX(-2px);
+  box-shadow: 8px 8px 0px #000000 !important;
+}
+
+/* 4. Section Separator Accents */
+section {
+  position: relative;
+}
+
+section::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #dc3545;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* 5. Process Step Numbers Badge */
+.process-step-num {
+  width: 36px;
+  height: 36px;
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px auto;
+}
+</style>
+
+<header class="bb-hero-section">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+
+            <!-- Left Column: Hero Content -->
+            <div class="col-lg-6 text-center text-lg-start">
+
+                <span class="hero-badge-pill mb-3">
+                    <i class="bi bi-heart-pulse-fill me-1"></i>
+                    Every Drop Counts
+                </span>
+
+                <h1 class="hero-display-title mb-4">
+                    Donate Blood.
+                    <br>
+                    <span class="bb-text-glow">Save Lives.</span>
+                </h1>
+
+                <p class="hero-subtitle mb-4">
+                    Your decision can give someone a second chance at life.
+                    Join our community of everyday heroes and help bridge the
+                    gap between blood donors and recipients.
+                </p>
+
+                <!-- Dynamic Action Buttons -->
+                <div class="d-flex flex-wrap gap-3 justify-content-lg-start justify-content-center">
+
+                    {% if user.is_authenticated %}
+
+                        {% if user.is_staff %}
+
+                            <!-- Admin Buttons -->
+                            <a href="{% url 'admin_dashboard' %}" class="btn btn-bb-red">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Admin Dashboard
+                            </a>
+
+                            <a href="{% url 'blood_inventory' %}" class="btn btn-bb-white">
+                                <i class="bi bi-box-seam me-2"></i>
+                                Blood Inventory
+                            </a>
+
+                        {% else %}
+
+                            <!-- Normal User -->
+                            <a href="{% url 'request_blood' %}" class="btn btn-bb-red">
+                                <i class="bi bi-droplet-fill me-2"></i>
+                                Request Blood
+                            </a>
+
+                            <a href="{% url 'my_requests' %}" class="btn btn-bb-outline">
+                                <i class="bi bi-clock-history me-2"></i>
+                                My Requests
+                            </a>
+
+                            <a href="{% url 'blood_inventory' %}" class="btn btn-bb-white">
+                                <i class="bi bi-box-seam me-2"></i>
+                                Blood Inventory
+                            </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <!-- Guest -->
+                        <a href="{% url 'signup' %}" class="btn btn-bb-red">
+                            <i class="bi bi-heart-fill me-2"></i>
+                            Become a Donor
+                        </a>
+
+                        <a href="{% url 'blood_inventory' %}" class="btn btn-bb-white">
+                            <i class="bi bi-box-seam me-2"></i>
+                            Blood Inventory
+                        </a>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <!-- Right Column: Interactive Image Carousel & Floating Badges -->
+            <div class="col-lg-6">
+                <div class="position-relative px-lg-3">
+
+                    <!-- Floating Stat Badge Top Left -->
+                    <div class="bb-float-card float-top-left text-start">
+                        <div class="d-flex align-items-center gap-2">
+
+                            <span class="badge bg-success rounded-circle p-2">
+                                <i class="bi bi-check-lg text-white"></i>
+                            </span>
+
+                            <div>
+                                <small class="d-block fw-bold text-dark lh-1">
+                                    {{ total_donors|default:0 }}
+                                </small>
+
+                                <small class="text-muted" style="font-size: 0.75rem;">
+                                    Registered Donors
+                                </small>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Floating Stat Badge Bottom Right -->
+                    <div class="bb-float-card float-bottom-right text-start">
+                        <div class="d-flex align-items-center gap-2">
+
+                            <span class="badge bg-danger rounded-circle p-2">
+                                <i class="bi bi-activity text-white"></i>
+                            </span>
+
+                            <div>
+                                <small class="d-block fw-bold text-dark lh-1">
+                                    24/7 Response
+                                </small>
+
+                                <small class="text-muted" style="font-size: 0.75rem;">
+                                    Emergency Ready
+                                </small>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Carousel Wrapper -->
+                    <div class="bb-carousel-container">
+
+                        <div id="heroMedicalCarousel"
+                             class="carousel slide carousel-fade bb-carousel-inner"
+                             data-bs-ride="carousel"
+                             data-bs-interval="3500">
+
+                            <!-- Carousel Indicators -->
+                            <div class="carousel-indicators">
+
+                                <button type="button"
+                                        data-bs-target="#heroMedicalCarousel"
+                                        data-bs-slide-to="0"
+                                        class="active"
+                                        aria-current="true"
+                                        aria-label="Slide 1">
+                                </button>
+
+                                <button type="button"
+                                        data-bs-target="#heroMedicalCarousel"
+                                        data-bs-slide-to="1"
+                                        aria-label="Slide 2">
+                                </button>
+
+                                <button type="button"
+                                        data-bs-target="#heroMedicalCarousel"
+                                        data-bs-slide-to="2"
+                                        aria-label="Slide 3">
+                                </button>
+
+                            </div>
+
+                            <div class="carousel-inner">
+
+                                <!-- Slide 1 -->
+                                <div class="carousel-item bb-carousel-item active">
+
+                                    <img src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1000&q=80"
+                                         class="bb-carousel-img"
+                                         alt="Blood Donation Care">
+
+                                    <div class="bb-carousel-overlay">
+                                        <div>
+
+                                            <span class="bb-carousel-badge">
+                                                Safe & Certified
+                                            </span>
+
+                                            <h5 class="fw-bold mb-1 text-white">
+                                                State-of-the-Art Care
+                                            </h5>
+
+                                            <p class="small text-white-50 mb-0">
+                                                Sterile equipment and medical professionals at every step.
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Slide 2 -->
+                                <div class="carousel-item bb-carousel-item">
+
+                                    <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=1000&q=80"
+                                         class="bb-carousel-img"
+                                         alt="Medical Technology">
+
+                                    <div class="bb-carousel-overlay">
+                                        <div>
+
+                                            <span class="bb-carousel-badge">
+                                                Rapid Matching
+                                            </span>
+
+                                            <h5 class="fw-bold mb-1 text-white">
+                                                Real-Time Inventory Tracking
+                                            </h5>
+
+                                            <p class="small text-white-50 mb-0">
+                                                Connecting critical patient requests directly with available blood inventory.
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Slide 3 -->
+                                <div class="carousel-item bb-carousel-item">
+
+                                    <img src="https://images.unsplash.com/photo-1536856136534-bb679c52a9aa?auto=format&fit=crop&w=1000&q=80"
+                                         class="bb-carousel-img"
+                                         alt="Healthcare Community">
+
+                                    <div class="bb-carousel-overlay">
+                                        <div>
+
+                                            <span class="bb-carousel-badge">
+                                                Community Impact
+                                            </span>
+
+                                            <h5 class="fw-bold mb-1 text-white">
+                                                Be Someone's Lifesaver
+                                            </h5>
+
+                                            <p class="small text-white-50 mb-0">
+                                                Your blood donation can help someone when every second matters.
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Previous -->
+                            <button class="carousel-control-prev"
+                                    type="button"
+                                    data-bs-target="#heroMedicalCarousel"
+                                    data-bs-slide="prev">
+
+                                <span class="carousel-control-prev-icon"
+                                      aria-hidden="true">
+                                </span>
+
+                                <span class="visually-hidden">
+                                    Previous
+                                </span>
+
+                            </button>
+
+                            <!-- Next -->
+                            <button class="carousel-control-next"
+                                    type="button"
+                                    data-bs-target="#heroMedicalCarousel"
+                                    data-bs-slide="next">
+
+                                <span class="carousel-control-next-icon"
+                                      aria-hidden="true">
+                                </span>
+
+                                <span class="visually-hidden">
+                                    Next
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+
+<!-- ========================================================= -->
+<!-- STATS SECTION -->
+<!-- ========================================================= -->
+
+<section class="stat-section">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <!-- Total Donors -->
+            <div class="col-6 col-lg-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <h3 class="fw-bold mt-3 mb-1 text-dark counter"
+                        data-target="{{ total_donors|default:0 }}">
+                        {{ total_donors|default:0 }}
+                    </h3>
+
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold">
+                        Total Donors
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Total Available Units -->
+            <div class="col-6 col-lg-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-box2-heart-fill"></i>
+                    </div>
+
+                    <h3 class="fw-bold mt-3 mb-1 text-dark counter"
+                        data-target="{{ total_units|default:0 }}">
+                        {{ total_units|default:0 }}
+                    </h3>
+
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold">
+                        Units Available
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Blood Requests -->
+            <div class="col-6 col-lg-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-activity"></i>
+                    </div>
+
+                    <h3 class="fw-bold mt-3 mb-1 text-dark counter"
+                        data-target="{{ total_requests|default:0 }}">
+                        {{ total_requests|default:0 }}
+                    </h3>
+
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold">
+                        Blood Requests
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Partner Hospitals -->
+            <div class="col-6 col-lg-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-hospital-fill"></i>
+                    </div>
+
+                    <h3 class="fw-bold mt-3 mb-1 text-dark counter"
+                        data-target="{{ partner_hospitals|default:150 }}">
+                        {{ partner_hospitals|default:150 }}
+                    </h3>
+
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold">
+                        Partner Hospitals
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- HOW IT WORKS SECTION -->
+<!-- ========================================================= -->
+
+<section class="py-5 bg-white">
+
+    <div class="container">
+
+        <div class="text-center mb-5 max-width-600 mx-auto">
+
+            <span class="text-danger fw-bold text-uppercase tracking-wider small">
+                Simple Steps
+            </span>
+
+            <h2 class="fw-bold display-6 mt-2">
+                How BloodBridge Works
+            </h2>
+
+            <p class="text-muted">
+                Connecting blood donors with patients in three seamless,
+                life-saving steps.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- Step 1 -->
+            <div class="col-md-4">
+
+                <div class="process-card text-center p-4">
+
+                    <div class="process-step-num">
+                        1
+                    </div>
+
+                    <div class="stat-icon-wrapper mb-3 mx-auto">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">
+                        Register
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Create your account as a donor or recipient
+                        in less than two minutes.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Step 2 -->
+            <div class="col-md-4">
+
+                <div class="process-card text-center p-4">
+
+                    <div class="process-step-num">
+                        2
+                    </div>
+
+                    <div class="stat-icon-wrapper mb-3 mx-auto">
+                        <i class="bi bi-card-checklist"></i>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">
+                        Request or Donate
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Submit real-time blood requests or donate
+                        directly to verified local needs.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Step 3 -->
+            <div class="col-md-4">
+
+                <div class="process-card text-center p-4">
+
+                    <div class="process-step-num">
+                        3
+                    </div>
+
+                    <div class="stat-icon-wrapper mb-3 mx-auto">
+                        <i class="bi bi-shield-fill-check"></i>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">
+                        Save Lives
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Fast emergency response connecting donors
+                        and critical patients seamlessly.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- AVAILABLE BLOOD INVENTORY -->
+<!-- ========================================================= -->
+
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5 max-width-600 mx-auto">
+
+            <span class="text-danger fw-bold text-uppercase tracking-wider small">
+                Inventory Status
+            </span>
+
+            <h2 class="fw-bold display-6 mt-2">
+                Available Blood Groups
+            </h2>
+
+            <p class="text-muted">
+                Explore real-time blood group availability across
+                our network of certified centers.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4 mb-5">
+
+            {% for item in inventory %}
+
+                <div class="col-6 col-md-4 col-lg-3">
+
+                    <div class="card blood-card text-center p-3">
+
+                        <!-- Blood Group -->
+                        <div class="blood-type-badge mx-auto mb-3">
+                            {{ item.blood_group }}
+                        </div>
+
+
+                        <!-- Blood Group Name -->
+                        <h5 class="fw-bold mb-2">
+
+                            {% if item.blood_group == "A+" %}
+                                A Positive
+                            {% elif item.blood_group == "A-" %}
+                                A Negative
+                            {% elif item.blood_group == "B+" %}
+                                B Positive
+                            {% elif item.blood_group == "B-" %}
+                                B Negative
+                            {% elif item.blood_group == "O+" %}
+                                O Positive
+                            {% elif item.blood_group == "O-" %}
+                                O Negative
+                            {% elif item.blood_group == "AB+" %}
+                                AB Positive
+                            {% elif item.blood_group == "AB-" %}
+                                AB Negative
+                            {% else %}
+                                {{ item.blood_group }}
+                            {% endif %}
+
+                        </h5>
+
+
+                        <!-- Available Units -->
+                        <p class="text-muted small mb-2">
+                            {{ item.units_available }} unit{{ item.units_available|pluralize }}
+                            available
+                        </p>
+
+
+                        <!-- Dynamic Status -->
+                        <div>
+
+                            {% if item.units_available == 0 %}
+
+                                <span class="status-badge badge-out">
+                                    Critical
+                                </span>
+
+                            {% elif item.units_available <= 5 %}
+
+                                <span class="status-badge badge-low">
+                                    Low Stock
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge badge-available">
+                                    In Stock
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-12">
+
+                    <div class="alert alert-light border text-center py-4">
+                        <i class="bi bi-box-seam fs-3 text-danger d-block mb-2"></i>
+
+                        <strong>
+                            Blood inventory is currently unavailable.
+                        </strong>
+
+                        <p class="text-muted mb-0 mt-1">
+                            Please check again later.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+      <div class="text-center my-4">
+        <a href="{% url 'blood_inventory' %}" class="btn btn-inventory">
+            <i class="fas fa-box"></i>
+            View Full Blood Inventory
+        </a>
+      </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- WHY DONATE BLOOD (BENEFITS) -->
+<!-- ========================================================= -->
+
+<section class="py-5 bg-white">
+    <div class="container">
+
+        <div class="text-center mb-5 max-width-600 mx-auto">
+            <span class="text-danger fw-bold text-uppercase tracking-wider small">
+                Make A Difference
+            </span>
+            <h2 class="fw-bold display-6 mt-2">
+                Why Give Blood?
+            </h2>
+            <p class="text-muted">
+                A single donation takes less than an hour, but its impact lasts a lifetime for those in need.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Benefit 1 -->
+            <div class="col-md-4">
+                <div class="benefit-card h-100 p-4 text-center">
+                    <div class="benefit-icon-wrapper mb-3 text-danger fs-2">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">
+                        Save Up to 3 Lives
+                    </h5>
+                    <p class="text-muted small mb-0">
+                        Your single blood donation is separated into red cells, plasma, and platelets, helping multiple patients.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Benefit 2 -->
+            <div class="col-md-4">
+                <div class="benefit-card h-100 p-4 text-center">
+                    <div class="benefit-icon-wrapper mb-3 text-danger fs-2">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">
+                        Free Health Checkup
+                    </h5>
+                    <p class="text-muted small mb-0">
+                        Before every donation, get a mini-physical checking pulse, blood pressure, body temperature, and hemoglobin levels.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Benefit 3 -->
+            <div class="col-md-4">
+                <div class="benefit-card h-100 p-4 text-center">
+                    <div class="benefit-icon-wrapper mb-3 text-danger fs-2">
+                        <i class="bi bi-emoji-smile"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">
+                        Boost Wellbeing
+                    </h5>
+                    <p class="text-muted small mb-0">
+                        Regular donation helps reduce excess iron stores in the body and promotes a powerful sense of community contribution.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- ELIGIBILITY GUIDELINES -->
+<!-- ========================================================= -->
+
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <div class="eligibility-container bg-white">
+            <div class="row align-items-center g-4">
+
+                <div class="col-lg-5">
+                    <span class="text-danger fw-bold text-uppercase tracking-wider small">
+                        Requirements
+                    </span>
+                    <h2 class="fw-bold display-6 mt-2 mb-3">
+                        Are You Eligible to Donate?
+                    </h2>
+                    <p class="text-muted mb-4">
+                        Most healthy adults can donate blood. Review the general baseline requirements before scheduling your visit.
+                    </p>
+                    <a href="{% url 'signup' %}" class="btn btn-bb-red px-4 py-2">
+                        Check & Register Now
+                    </a>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="row g-3">
+
+                        <div class="col-sm-6">
+                            <div class="eligibility-item d-flex align-items-start gap-3 p-3 bg-light">
+                                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Age Limit</h6>
+                                    <small class="text-muted d-block">Between 18 and 65 years old.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="eligibility-item d-flex align-items-start gap-3 p-3 bg-light">
+                                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Body Weight</h6>
+                                    <small class="text-muted d-block">At least 50 kg (110 lbs).</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="eligibility-item d-flex align-items-start gap-3 p-3 bg-light">
+                                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Donation Interval</h6>
+                                    <small class="text-muted d-block">At least 56 days since your last whole blood donation.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="eligibility-item d-flex align-items-start gap-3 p-3 bg-light">
+                                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Health Status</h6>
+                                    <small class="text-muted d-block">Feeling well and healthy on the day of donation.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- EMERGENCY CALL TO ACTION -->
+<!-- ========================================================= -->
+
+<section class="pb-5 bg-light">
+    <div class="container">
+        <div class="urgent-banner">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <span class="badge bg-danger rounded-pill px-3 py-2">
+                        <i class="fas fa-heartbeat me-1"></i>
+                        Urgent Need
+                    </span>
+
+                    <h2 class="banner-title">
+                        Someone may need your blood today.
+                    </h2>
+
+                    <p class="banner-subtitle">
+                        Become part of a community that helps connect blood donors
+                        with patients when every second matters.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end">
+                    <a href="{% url 'donate_blood' %}"
+                       class="btn btn-danger btn-lg fw-bold px-4 py-3 border border-2 border-dark">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Become a Donor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const counters = document.querySelectorAll(".counter");
+
+    counters.forEach(counter => {
+
+        const target = parseInt(counter.getAttribute("data-target")) || 0;
+
+        let current = 0;
+
+        const duration = 1200;
+        const increment = target / (duration / 16);
+
+        function updateCounter() {
+
+            current += increment;
+
+            if (current < target) {
+
+                counter.innerText =
+                    Math.floor(current).toLocaleString();
+
+                requestAnimationFrame(updateCounter);
+
+            } else {
+
+                counter.innerText =
+                    target.toLocaleString();
+
+            }
+
+        }
+
+        updateCounter();
+
+    });
+
+});
+</script>
+
+{% endblock %}

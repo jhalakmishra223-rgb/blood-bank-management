@@ -1,0 +1,629 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Blood Requests | BloodBridge Admin{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --bb-crimson-dark: #6b0000;
+    --bb-crimson: #900000;
+    --bb-crimson-bright: #dc143c;
+    --bb-surface: #ffffff;
+    --bb-border-color: #cbd5e1;
+  }
+
+  /* Deep Crimson Hero Header */
+  .bb-crimson-hero {
+    position: relative;
+    background: linear-gradient(135deg, #4a0000 0%, #7a0000 50%, #a00000 100%);
+    overflow: hidden;
+    border-radius: 0 0 1.5rem 1.5rem;
+    box-shadow: 0 12px 28px -4px rgba(74, 0, 0, 0.4);
+  }
+
+  .bb-crimson-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 140%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(220, 20, 60, 0.25) 0%, transparent 60%);
+    animation: crimsonPulse 10s infinite alternate ease-in-out;
+    pointer-events: none;
+  }
+
+  @keyframes crimsonPulse {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.15) translate(2%, 2%); }
+  }
+
+  /* Animated Syringe Graphic */
+  .syringe-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
+    transform: rotate(-45deg);
+    animation: floatSyringe 4s ease-in-out infinite;
+  }
+
+  @keyframes floatSyringe {
+    0%, 100% { transform: rotate(-45deg) translateY(0px); }
+    50% { transform: rotate(-45deg) translateY(-8px); }
+  }
+
+  .syringe-body {
+    width: 44px;
+    height: 130px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    position: relative;
+    margin: 0 auto;
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+
+  /* Measurement marks on barrel */
+  .syringe-marks {
+    position: absolute;
+    right: 3px;
+    top: 15px;
+    bottom: 15px;
+    width: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 3;
+  }
+
+  .syringe-mark {
+    height: 2px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Blood fluid inside barrel */
+  .syringe-fluid {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(180deg, #ff2a4b 0%, #b30000 100%);
+    animation: fillFluid 3s infinite ease-in-out alternate;
+  }
+
+  @keyframes fillFluid {
+    0% { height: 45%; }
+    100% { height: 75%; }
+  }
+
+  /* Plunger Assembly */
+  .syringe-plunger {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.7);
+    animation: movePlunger 3s infinite ease-in-out alternate;
+  }
+
+  @keyframes movePlunger {
+    0% { top: -15px; }
+    100% { top: -35px; }
+  }
+
+  .plunger-top {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+  }
+
+  .plunger-seal {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 10px;
+    background: #1e293b;
+    border-radius: 2px;
+  }
+
+  /* Needle Assembly */
+  .syringe-nozzle {
+    width: 10px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    margin: 0 auto;
+    border-radius: 0 0 2px 2px;
+  }
+
+  .syringe-needle {
+    width: 3px;
+    height: 35px;
+    background: linear-gradient(180deg, #cbd5e1 0%, #ffffff 100%);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .needle-drop {
+    width: 6px;
+    height: 6px;
+    background: #ff2a4b;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: dropNeedle 1.8s infinite ease-in;
+  }
+
+  @keyframes dropNeedle {
+    0% { transform: translateX(-50%) scale(0.3); opacity: 0; }
+    50% { transform: translateX(-50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, 18px) scale(0.2); opacity: 0; }
+  }
+
+  /* Structural Card Adjustments */
+  .bb-glass-card {
+    background: #ffffff;
+    border: 1px solid var(--bb-border-color);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .bb-glass-card:hover {
+    border-color: #94a3b8;
+    box-shadow: 0 18px 32px -8px rgba(0, 0, 0, 0.12), 0 10px 12px -6px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Form & Table Overflow Fixes */
+  .bb-filter-input, .bb-filter-select {
+    border-radius: 0.65rem;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+    max-width: 100%;
+  }
+
+  .bb-filter-input:focus, .bb-filter-select:focus {
+    background-color: #ffffff;
+    border-color: var(--bb-crimson-bright);
+    box-shadow: 0 0 0 0.25rem rgba(220, 20, 60, 0.15);
+  }
+
+  .bb-table-wrapper {
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    overflow-x: auto;
+    width: 100%;
+    background: #ffffff;
+  }
+
+  .bb-table {
+    margin-bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .bb-table thead th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.9rem 1rem;
+    border-bottom: 2px solid #cbd5e1;
+  }
+
+  .bb-table tbody tr {
+    transition: background-color 0.15s ease;
+  }
+
+  .bb-table tbody tr:hover {
+    background-color: rgba(220, 20, 60, 0.03) !important;
+  }
+
+  .bb-table td {
+    padding: 0.9rem 1rem;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Badge & Action Safety Utilities */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .status-badge-pending { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .status-badge-approved { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .status-badge-rejected { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+  .status-badge-fulfilled { background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+  .status-badge-default { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-badge-pending .status-dot { background-color: #d97706; animation: pulseDot 1.5s infinite; }
+  .status-badge-approved .status-dot { background-color: #16a34a; }
+  .status-badge-rejected .status-dot { background-color: #dc2626; }
+  .status-badge-fulfilled .status-dot { background-color: #2563eb; }
+
+  @keyframes pulseDot {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .btn-action {
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+  }
+
+  .btn-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-crimson {
+    background-color: var(--bb-crimson-bright);
+    border-color: var(--bb-crimson-bright);
+    color: #ffffff;
+  }
+
+  .btn-crimson:hover {
+    background-color: #b30000;
+    border-color: #b30000;
+    color: #ffffff;
+  }
+
+  .blood-type-chip {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #dc143c 0%, #800000 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    box-shadow: 0 3px 8px rgba(128, 0, 0, 0.25);
+    flex-shrink: 0;
+  }
+
+  .user-avatar-chip {
+    width: 36px;
+    height: 36px;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cell-patient-name {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cell-hospital-name {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
+
+<!-- ==========================================
+     1. DEEP CRIMSON HERO SECTION
+   ========================================== -->
+<div class="bb-crimson-hero text-white py-4 py-md-5 mb-4">
+    <div class="container position-relative z-1">
+        <div class="row align-items-center g-4">
+            <!-- Left Aligned Text Content -->
+            <div class="col-lg-8 text-start">
+                <span class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white bg-opacity-15 border border-white border-opacity-20 backdrop-blur mb-3 text-uppercase tracking-wider fs-7 fw-bold">
+                    <i class="bi bi-shield-lock-fill text-warning"></i> Admin Panel
+                </span>
+                <h1 class="display-5 fw-extrabold mb-2 text-white text-break">Manage Blood Requests</h1>
+                <p class="lead text-white-50 mb-4 fs-6 fs-md-5" style="max-width: 600px;">
+                    Review, verify, and process urgent blood requirements submitted across the network in real-time.
+                </p>
+                
+                <div class="d-inline-flex align-items-center gap-3 bg-black bg-opacity-35 px-3.5 py-2 rounded-pill border border-white border-opacity-20 shadow-sm flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-inbox-fill text-warning fs-5"></i>
+                        <span class="fw-semibold fs-7 text-uppercase tracking-wider text-white-50">Total Requests:</span>
+                    </div>
+                    <span class="badge bg-warning text-dark rounded-pill px-3 py-1.5 fs-6 fw-extrabold shadow-sm">{{ requests|length }}</span>
+                </div>
+            </div>
+
+            <!-- Right Aligned Animated Syringe -->
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <div class="syringe-container">
+                    <div class="syringe-plunger">
+                        <div class="plunger-top"></div>
+                        <div class="plunger-seal"></div>
+                    </div>
+                    <div class="syringe-body">
+                        <div class="syringe-marks">
+                            <div class="syringe-mark"></div>
+                            <div class="syringe-mark"></div>
+                            <div class="syringe-mark"></div>
+                            <div class="syringe-mark"></div>
+                            <div class="syringe-mark"></div>
+                        </div>
+                        <div class="syringe-fluid"></div>
+                    </div>
+                    <div class="syringe-nozzle"></div>
+                    <div class="syringe-needle">
+                        <div class="needle-drop"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     2. MAIN MANAGEMENT CONTENT
+   ========================================== -->
+<section class="pb-5">
+    <div class="container">
+        
+        <!-- Filter & Search Toolbar Card -->
+        <div class="bb-glass-card p-3 p-md-4 mb-4">
+            <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                <div class="d-flex align-items-center gap-2 overflow-hidden">
+                    <div class="p-2 bg-danger bg-opacity-10 rounded-3 text-danger flex-shrink-0">
+                        <i class="bi bi-funnel-fill fs-5"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h5 class="fw-bold mb-0 text-dark text-truncate">Filter Requests</h5>
+                        <small class="text-muted text-truncate d-block">Narrow down specific requests across system logs</small>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="get" action="" class="row g-3">
+                <!-- Search Input -->
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label fw-bold text-dark fs-7 text-uppercase tracking-wider">Search Patient / Hospital</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" name="q" value="{{ request.GET.q }}" class="form-control border-start-0 bb-filter-input" placeholder="Patient name, hospital, or city...">
+                    </div>
+                </div>
+
+                <!-- Blood Group Dropdown -->
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-bold text-dark fs-7 text-uppercase tracking-wider">Blood Group</label>
+                    <select name="blood_group" class="form-select bb-filter-select">
+                        <option value="">All Blood Groups</option>
+                        <option value="A+" {% if request.GET.blood_group == "A+" %}selected{% endif %}>A+</option>
+                        <option value="A-" {% if request.GET.blood_group == "A-" %}selected{% endif %}>A-</option>
+                        <option value="B+" {% if request.GET.blood_group == "B+" %}selected{% endif %}>B+</option>
+                        <option value="B-" {% if request.GET.blood_group == "B-" %}selected{% endif %}>B-</option>
+                        <option value="O+" {% if request.GET.blood_group == "O+" %}selected{% endif %}>O+</option>
+                        <option value="O-" {% if request.GET.blood_group == "O-" %}selected{% endif %}>O-</option>
+                        <option value="AB+" {% if request.GET.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                        <option value="AB-" {% if request.GET.blood_group == "AB-" %}selected{% endif %}>AB-</option>
+                    </select>
+                </div>
+
+                <!-- Status Dropdown -->
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-bold text-dark fs-7 text-uppercase tracking-wider">Status</label>
+                    <select name="status" class="form-select bb-filter-select">
+                        <option value="">All Statuses</option>
+                        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
+                        <option value="approved" {% if request.GET.status == "approved" %}selected{% endif %}>Approved</option>
+                        <option value="rejected" {% if request.GET.status == "rejected" %}selected{% endif %}>Rejected</option>
+                        <option value="fulfilled" {% if request.GET.status == "fulfilled" %}selected{% endif %}>Fulfilled</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-lg-2 col-md-6 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-crimson w-100 py-2 rounded-3 fw-bold btn-action justify-content-center">
+                        <i class="bi bi-filter"></i> Apply
+                    </button>
+                    <a href="?" class="btn btn-outline-secondary w-100 py-2 rounded-3 fw-bold btn-action justify-content-center">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Requests Data Table Card -->
+        <div class="bb-glass-card p-3 p-md-4">
+            <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                <div class="overflow-hidden">
+                    <span class="text-danger fw-bold text-uppercase tracking-wider fs-7 d-block">Administrative Overview</span>
+                    <h4 class="fw-bold text-dark mb-0 text-truncate">Blood Request Dispatches</h4>
+                </div>
+                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-20 px-3 py-2 rounded-pill fw-bold fs-7 d-none d-sm-inline-flex align-items-center gap-1.5 flex-shrink-0">
+                    <i class="bi bi-activity"></i> Live Queue
+                </span>
+            </div>
+
+            {% if requests %}
+                <div class="bb-table-wrapper">
+                    <table class="table bb-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Group</th>
+                                <th>Units</th>
+                                <th>Hospital</th>
+                                <th>City</th>
+                                <th>Required Date</th>
+                                <th>Status</th>
+                                <th>Requested On</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                                <tr>
+                                    <!-- Patient Name -->
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2.5 cell-patient-name">
+                                            <div class="user-avatar-chip">
+                                                <i class="bi bi-person-fill"></i>
+                                            </div>
+                                            <span class="fw-bold text-dark fs-6 text-truncate" title="{{ request.patient_name }}">{{ request.patient_name }}</span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Blood Group -->
+                                    <td>
+                                        <div class="blood-type-chip">
+                                            {{ request.blood_group }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Units Required -->
+                                    <td>
+                                        <span class="fw-bold text-dark">{{ request.units_required }}</span> 
+                                        <span class="text-muted fs-7">Unit{{ request.units_required|pluralize }}</span>
+                                    </td>
+
+                                    <!-- Hospital -->
+                                    <td>
+                                        <span class="fw-semibold text-dark fs-7 cell-hospital-name d-inline-block" title="{{ request.hospital_name }}">{{ request.hospital_name }}</span>
+                                    </td>
+
+                                    <!-- City -->
+                                    <td>
+                                        <span class="text-muted fs-7 d-inline-flex align-items-center gap-1">
+                                            <i class="bi bi-geo-alt text-danger"></i>{{ request.city }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Required Date -->
+                                    <td>
+                                        <span class="text-dark fs-7 font-monospace fw-semibold bg-light px-2.5 py-1 rounded-2 border">
+                                            <i class="bi bi-calendar-event me-1 text-danger"></i>{{ request.required_date|date:"M d, Y" }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Status Badge -->
+                                    <td>
+                                        {% if request.status|lower == 'pending' %}
+                                            <span class="status-badge status-badge-pending">
+                                                <span class="status-dot"></span> Pending
+                                            </span>
+                                        {% elif request.status|lower == 'approved' %}
+                                            <span class="status-badge status-badge-approved">
+                                                <span class="status-dot"></span> Approved
+                                            </span>
+                                        {% elif request.status|lower == 'rejected' %}
+                                            <span class="status-badge status-badge-rejected">
+                                                <span class="status-dot"></span> Rejected
+                                            </span>
+                                        {% elif request.status|lower == 'fulfilled' %}
+                                            <span class="status-badge status-badge-fulfilled">
+                                                <span class="status-dot"></span> Fulfilled
+                                            </span>
+                                        {% else %}
+                                            <span class="status-badge status-badge-default">
+                                                <span class="status-dot"></span> {{ request.status|title }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Requested On -->
+                                    <td>
+                                        <small class="text-muted font-monospace fs-7">
+                                            {{ request.requested_on|date:"M d, Y" }}
+                                        </small>
+                                    </td>
+
+                                    <!-- Actions Column -->
+                                    <td class="text-center">
+                                        <div class="d-inline-flex gap-1.5 flex-wrap justify-content-center">
+                                            {% if request.status == "Pending" %}
+                                            <a href="{% url 'approve_request' request.id %}"
+                                               class="btn btn-sm btn-outline-success btn-action px-2.5 py-1 fs-7 fw-bold"
+                                               title="Approve Request">
+                                                <i class="bi bi-check-lg"></i> Approve
+                                            </a>
+                                            {% endif %}
+
+                                            {% if request.status == "Pending" or request.status == "Approved" %}
+                                            <a href="{% url 'reject_request' request.id %}"
+                                               class="btn btn-sm btn-outline-danger btn-action px-2.5 py-1 fs-7 fw-bold"
+                                               title="Reject Request">
+                                                <i class="bi bi-x-lg"></i> Reject
+                                            </a>
+                                            {% endif %}
+
+                                            {% if request.status == "Approved" %}
+                                            <a href="{% url 'fulfill_request' request.id %}"
+                                               class="btn btn-sm btn-outline-primary btn-action px-2.5 py-1 fs-7 fw-bold"
+                                               title="Mark as Fulfilled">
+                                                <i class="bi bi-droplet-fill"></i> Fulfill
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <!-- Empty State Card -->
+                <div class="text-center py-5 my-2">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle p-4 mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-folder-x fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">No Blood Requests Found</h5>
+                    <p class="text-muted mx-auto mb-0 fs-6" style="max-width: 500px;">
+                        There are currently no blood requests matching your active filter choices or waiting in the verification queue.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

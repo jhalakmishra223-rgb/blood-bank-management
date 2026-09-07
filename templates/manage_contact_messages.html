@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Manage Contact Messages | BloodBridge
+{% endblock %}
+
+{% block content %}
+
+<!-- ==========================================================================
+     GLOBAL & COMPONENT STYLES
+     ========================================================================== -->
+<style>
+  /* Deep Crimson Hero Card */
+  .hero-admin-card {
+    position: relative;
+    background: linear-gradient(135deg, #2b0000 0%, #540000 50%, #111318 100%);
+    border-radius: 1.25rem;
+    border: 2px solid #1e293b;
+    box-shadow: 0 12px 32px rgba(56, 0, 0, 0.45);
+    overflow: hidden;
+  }
+
+  .hero-decor-circle-1 {
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, #ff2a4b 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.6;
+    animation: heroGlow 6s infinite alternate ease-in-out;
+  }
+
+  .hero-decor-circle-2 {
+    position: absolute;
+    bottom: -90px;
+    left: 5%;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(220, 20, 60, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  @keyframes heroGlow {
+    0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+    100% { transform: scale(1.15) translate(3%, 3%); opacity: 0.85; }
+  }
+
+  /* Mail Letter Floating & Bounce Animation */
+  .animated-mail-box {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(220, 20, 60, 0.2);
+    border: 2px solid rgba(220, 20, 60, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .animated-mail-icon {
+    font-size: 3.2rem;
+    color: #ff2a4b;
+    animation: mailFloat 3.5s ease-in-out infinite;
+  }
+
+  .animated-letter-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    animation: badgePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes mailFloat {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+      filter: drop-shadow(0 4px 6px rgba(220, 20, 60, 0.3));
+    }
+    50% {
+      transform: translateY(-10px) rotate(-4deg);
+      filter: drop-shadow(0 10px 12px rgba(220, 20, 60, 0.5));
+    }
+  }
+
+  @keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+  }
+
+  /* Utility & Dashboard Card Styles */
+  .fw-black { font-weight: 900 !important; }
+  .letter-spacing-1 { letter-spacing: 0.08em; }
+  .max-width-800 { max-width: 800px; }
+  .max-width-500 { max-width: 500px; }
+  .fs-7 { font-size: 0.75rem !important; }
+
+  .bb-dashboard-card {
+    background: #ffffff;
+    border: 2px solid #1e293b;
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    position: relative;
+  }
+
+  .bb-dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #800000, #dc143c);
+  }
+
+  .action-icon-box {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    border: 1px solid;
+  }
+
+  /* Table & Hover State */
+  .hover-danger:hover {
+    color: #dc143c !important;
+  }
+  .divide-y > tr:not(:last-child) {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .transition-all {
+    transition: background-color 0.2s ease;
+  }
+  .transition-all:hover {
+    background-color: #fff5f5 !important;
+  }
+
+  /* Fade Entrance Animation */
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .status-dot-active {
+    display: inline-block;
+    border-radius: 50%;
+    background-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+  }
+</style>
+
+<!-- ==========================================================================
+     1. HERO HEADER SECTION (Deep Crimson Theme with Animated Mail Letter)
+     ========================================================================== -->
+<header class="pt-0 pb-4 mb-4">
+  <div class="container-fluid">
+    <div class="hero-admin-card p-4 p-md-5 text-white animate-fade-in">
+      <div class="hero-decor-circle-1"></div>
+      <div class="hero-decor-circle-2"></div>
+      
+      <div class="row align-items-center gy-4 position-relative z-1">
+        <div class="col-lg-8">
+          <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-1 bg-black bg-opacity-50 rounded-pill fs-7 fw-bold border border-white border-opacity-25 shadow-sm text-white">
+            <i class="bi bi-envelope-fill text-danger"></i>
+            <span class="letter-spacing-1">CONTACT MANAGEMENT</span>
+          </div>
+          <h1 class="display-5 fw-black text-white mb-2">Contact Messages</h1>
+          <p class="lead text-white-50 mb-0 max-width-800 fs-6 fs-md-5">
+            View, monitor, and respond to messages submitted by BloodBridge users and visitors.
+          </p>
+        </div>
+
+        <!-- Animated Message Icon Container -->
+        <div class="col-lg-4 text-lg-end text-center d-none d-lg-block">
+          <div class="animated-mail-box">
+            <i class="bi bi-envelope-paper-heart-fill animated-mail-icon"></i>
+            <span class="badge rounded-circle bg-danger p-2 animated-letter-badge border border-white">
+              <span class="visually-hidden">New Messages</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ==========================================================================
+     2. MESSAGES TABLE CONTAINER
+     ========================================================================== -->
+<div class="container-fluid mb-5 animate-fade-in">
+  <div class="bb-dashboard-card overflow-hidden">
+    
+    <!-- Table Header Toolbar -->
+    <div class="bg-white p-4 border-bottom border-2 border-dark-subtle d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="action-icon-box bg-danger bg-opacity-10 text-danger border-danger border-opacity-25">
+          <i class="bi bi-inbox-fill fs-4"></i>
+        </div>
+        <div>
+          <h5 class="fw-bold text-dark mb-0">Received Messages</h5>
+          <small class="text-muted">All contact form submissions sorted by latest</small>
+        </div>
+      </div>
+      
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-danger text-white fs-6 px-3 py-2 rounded-pill shadow-sm border border-danger border-opacity-50">
+          <i class="bi bi-chat-left-text-fill me-1"></i> {{ contact_messages|length }} Messages
+        </span>
+      </div>
+    </div>
+
+    <!-- Card Body Content -->
+    <div class="p-0">
+      {% if contact_messages %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-dark text-white">
+              <tr class="text-uppercase fs-7 letter-spacing-1">
+                <th scope="col" class="py-3 ps-4 bg-dark text-white border-0">Sender</th>
+                <th scope="col" class="py-3 bg-dark text-white border-0">Email</th>
+                <th scope="col" class="py-3 bg-dark text-white border-0">Subject</th>
+                <th scope="col" class="py-3 bg-dark text-white border-0">Message</th>
+                <th scope="col" class="py-3 bg-dark text-white border-0">Date</th>
+                <th scope="col" class="py-3 pe-4 text-center bg-dark text-white border-0">Status</th>
+              </tr>
+            </thead>
+            
+            <tbody class="divide-y">
+              {% for contact in contact_messages %}
+                <tr class="transition-all">
+                  
+                  <!-- Sender -->
+                  <td class="ps-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="rounded-circle bg-danger bg-opacity-10 text-danger fw-bold d-flex align-items-center justify-content-center border border-danger border-opacity-25" style="width: 40px; height: 40px; min-width: 40px;">
+                        {{ contact.full_name|slice:":1"|upper }}
+                      </div>
+                      <div>
+                        <div class="fw-bold text-dark fs-6">{{ contact.full_name }}</div>
+                        {% if contact.user %}
+                          <small class="text-danger fw-semibold">
+                            <i class="bi bi-person-badge me-1"></i>@{{ contact.user.username }}
+                          </small>
+                        {% else %}
+                          <small class="text-muted">
+                            <i class="bi bi-globe me-1"></i>Guest Visitor
+                          </small>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Email -->
+                  <td class="py-3">
+                    <a href="mailto:{{ contact.email }}" class="text-decoration-none text-dark fw-semibold d-inline-flex align-items-center gap-1 hover-danger">
+                      <i class="bi bi-envelope text-muted"></i> {{ contact.email }}
+                    </a>
+                  </td>
+
+                  <!-- Subject -->
+                  <td class="py-3">
+                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2.5 py-1.5 rounded-2 fw-bold">
+                      {{ contact.get_subject_display }}
+                    </span>
+                  </td>
+
+                  <!-- Message Preview -->
+                  <td class="py-3" style="min-width: 280px; max-width: 400px;">
+                    <p class="text-secondary small mb-0 lh-sm text-truncate">
+                      {{ contact.message|truncatechars:100 }}
+                    </p>
+                  </td>
+
+                  <!-- Date & Time -->
+                  <td class="py-3">
+                    <div class="small text-dark fw-semibold">
+                      <i class="bi bi-calendar3 text-muted me-1"></i>{{ contact.created_at|date:"M d, Y" }}
+                    </div>
+                    <div class="fs-7 text-muted">
+                      <i class="bi bi-clock text-muted me-1"></i>{{ contact.created_at|date:"h:i A" }}
+                    </div>
+                  </td>
+
+                  <!-- Status -->
+                  <td class="py-3 pe-4 text-center">
+                    {% if contact.is_read %}
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-1.5 rounded-pill fw-bold d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-check-circle-fill fs-7"></i> Read
+                      </span>
+                    {% else %}
+                      <span class="badge bg-warning bg-opacity-25 text-dark border border-warning border-opacity-50 px-3 py-1.5 rounded-pill fw-bold d-inline-flex align-items-center gap-1 shadow-sm">
+                        <span class="status-dot-active me-1" style="width: 8px; height: 8px;"></span> New
+                      </span>
+                    {% endif %}
+                  </td>
+
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      {% else %}
+        
+        <!-- Empty State UI -->
+        <div class="text-center py-5 px-4 my-3">
+          <div class="d-inline-flex align-items-center justify-content-center p-4 rounded-circle bg-light text-muted mb-3 border border-secondary border-opacity-25 shadow-sm">
+            <i class="bi bi-envelope-open display-4 text-muted opacity-50"></i>
+          </div>
+          <h4 class="fw-bold text-dark mb-2">No Messages Found</h4>
+          <p class="text-muted max-width-500 mx-auto mb-0">
+            There are currently no contact form submissions in the database. New user inquiries will be displayed here automatically.
+          </p>
+        </div>
+
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

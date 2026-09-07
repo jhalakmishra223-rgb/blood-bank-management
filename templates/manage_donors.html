@@ -1,0 +1,436 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Donors | BloodBridge{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* BloodBridge Deep Red Theme Palette */
+    :root {
+        --bb-deep-red-start: #a71d2a;
+        --bb-deep-red-end: #660000;
+        --bb-deep-red-dark: #4a0000;
+        --bb-accent-glow: rgba(167, 29, 42, 0.15);
+    }
+
+    /* Keyframe Animations */
+    @keyframes heroFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.15); opacity: 0.85; }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Deep Red Gradient Hero */
+    .bb-deep-red-hero {
+        background: linear-gradient(135deg, var(--bb-deep-red-start) 0%, #800c19 50%, var(--bb-deep-red-end) 100%) !important;
+        border-bottom: 3px solid var(--bb-deep-red-dark);
+    }
+
+    .hero-floating-icon {
+        animation: heroFloat 5s ease-in-out infinite;
+    }
+
+    .pulse-heart {
+        animation: pulseGlow 2s infinite;
+    }
+
+    /* Custom Deep Red Buttons & Badges */
+    .btn-deep-red {
+        background: linear-gradient(135deg, var(--bb-deep-red-start), var(--bb-deep-red-end));
+        color: #ffffff;
+        border: none;
+        transition: all 0.25s ease;
+    }
+
+    .btn-deep-red:hover, .btn-deep-red:focus {
+        background: linear-gradient(135deg, #800c19, var(--bb-deep-red-dark));
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--bb-accent-glow);
+    }
+
+    .btn-outline-deep-red {
+        color: var(--bb-deep-red-start);
+        border-color: var(--bb-deep-red-start);
+        transition: all 0.25s ease;
+    }
+
+    .btn-outline-deep-red:hover {
+        background: linear-gradient(135deg, var(--bb-deep-red-start), var(--bb-deep-red-end));
+        color: #ffffff;
+        border-color: transparent;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--bb-accent-glow);
+    }
+
+    .badge-deep-red {
+        background: linear-gradient(135deg, var(--bb-deep-red-start), var(--bb-deep-red-end));
+        color: #ffffff;
+    }
+
+    .badge-deep-red-subtle {
+        background-color: rgba(167, 29, 42, 0.08);
+        color: var(--bb-deep-red-start);
+        border: 1px solid rgba(167, 29, 42, 0.2);
+    }
+
+    /* Interactive Cards with Broad Black Border */
+    .bb-card {
+        border: 3px solid #000000 !important;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .bb-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.5rem 1.25rem var(--bb-accent-glow) !important;
+    }
+
+    .donor-avatar {
+        transition: transform 0.3s ease;
+        object-fit: cover;
+    }
+
+    .bb-card:hover .donor-avatar {
+        transform: scale(1.05);
+    }
+
+    .donor-info-row {
+        transition: background-color 0.2s ease;
+    }
+
+    .bb-card:hover .donor-info-row {
+        background-color: rgba(167, 29, 42, 0.04);
+    }
+
+    .bb-card:hover .donor-info-row i {
+        color: var(--bb-deep-red-start) !important;
+    }
+
+    /* Entrance Animation Timing */
+    .animate-fade-in {
+        animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    .stagger-1 { animation-delay: 0.08s; }
+    .stagger-2 { animation-delay: 0.16s; }
+    .stagger-3 { animation-delay: 0.24s; }
+    .stagger-4 { animation-delay: 0.32s; }
+
+    /* Accessibility Support */
+    @media (prefers-reduced-motion: reduce) {
+        .hero-floating-icon,
+        .pulse-heart,
+        .bb-card,
+        .donor-avatar,
+        .btn-deep-red,
+        .btn-outline-deep-red,
+        .animate-fade-in {
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 px-md-4 pt-2 pb-4">
+
+    <!-- HERO / PAGE HEADER (Deep Red Gradient) -->
+    <div class="page-header bb-deep-red-hero mt-1 mb-4 p-4 p-md-5 rounded-4 text-white shadow-sm position-relative overflow-hidden animate-fade-in">
+        <!-- Subtle Decorative Background Droplets -->
+        <div class="position-absolute top-0 start-0 translate-middle rounded-circle bg-white opacity-10" style="width: 220px; height: 220px; pointer-events: none;"></div>
+        <div class="position-absolute bottom-0 end-0 translate-middle-x rounded-circle bg-black opacity-10" style="width: 260px; height: 260px; pointer-events: none;"></div>
+
+        <div class="row align-items-center position-relative z-1">
+            <div class="col-lg-8">
+                <span class="badge bg-white fw-bold text-uppercase px-3 py-2 rounded-pill mb-3 tracking-wider shadow-sm" style="color: var(--bb-deep-red-start);">
+                    <i class="bi bi-person-heart me-1 pulse-heart" style="color: var(--bb-deep-red-start);"></i> Donor Management
+                </span>
+                <h1 class="display-5 fw-bold mb-2">Manage Donors</h1>
+                <p class="lead mb-0 text-white-50 fs-6 fs-md-5">
+                    Monitor registered blood donors, review donor profiles, and keep the BloodBridge donor network organized.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end d-none d-lg-block">
+                <i class="bi bi-heart-pulse-fill display-1 text-white opacity-25 hero-floating-icon d-inline-block"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- DONOR STATISTICS -->
+    <div class="row g-3 mb-4 animate-fade-in stagger-1">
+        <!-- Total Donors -->
+        <div class="col-12 col-md-4">
+            <div class="card bb-card shadow-sm rounded-3 h-100">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted fw-semibold text-uppercase fs-7 d-block mb-1">Total Donors</span>
+                        <h2 class="display-6 fw-bold text-dark mb-0">{{ total_donors }}</h2>
+                    </div>
+                    <div class="rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background-color: rgba(167, 29, 42, 0.1); color: var(--bb-deep-red-start);">
+                        <i class="bi bi-people-fill fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Donors -->
+        <div class="col-12 col-md-4">
+            <div class="card bb-card shadow-sm rounded-3 h-100">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted fw-semibold text-uppercase fs-7 d-block mb-1">Active Donors</span>
+                        <h2 class="display-6 fw-bold text-success mb-0">{{ active_donors }}</h2>
+                    </div>
+                    <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="bi bi-person-check-fill fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inactive Donors -->
+        <div class="col-12 col-md-4">
+            <div class="card bb-card shadow-sm rounded-3 h-100">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted fw-semibold text-uppercase fs-7 d-block mb-1">Inactive Donors</span>
+                        <h2 class="display-6 fw-bold text-secondary mb-0">{{ inactive_donors }}</h2>
+                    </div>
+                    <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="bi bi-person-x-fill fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH & FILTER PANEL -->
+    <div class="card bb-card shadow-sm rounded-3 mb-4 animate-fade-in stagger-2">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-funnel-fill me-2 fs-5" style="color: var(--bb-deep-red-start);"></i>
+                <div>
+                    <h5 class="fw-bold text-dark mb-0 fs-6">Find & Filter Donors</h5>
+                    <small class="text-muted">Search the donor network and quickly locate donors by their available information.</small>
+                </div>
+            </div>
+
+            <form method="GET" action="" class="row g-3 align-items-end">
+                <!-- Search Bar -->
+                <div class="col-12 col-lg-5">
+                    <label for="searchQuery" class="form-label fw-semibold text-muted small">Search</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" 
+                               id="searchQuery"
+                               name="q" 
+                               class="form-control bg-light border-start-0 ps-0" 
+                               placeholder="Search by name, username, email, blood group or city..." 
+                               value="{{ search_query }}">
+                    </div>
+                </div>
+
+                <!-- Blood Group Filter -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label for="bloodGroupFilter" class="form-label fw-semibold text-muted small">Blood Group</label>
+                    <select id="bloodGroupFilter" name="blood_group" class="form-select bg-light">
+                        <option value="" {% if not selected_blood_group %}selected{% endif %}>All Blood Groups</option>
+                        <option value="A+" {% if selected_blood_group == "A+" %}selected{% endif %}>A+</option>
+                        <option value="A-" {% if selected_blood_group == "A-" %}selected{% endif %}>A-</option>
+                        <option value="B+" {% if selected_blood_group == "B+" %}selected{% endif %}>B+</option>
+                        <option value="B-" {% if selected_blood_group == "B-" %}selected{% endif %}>B-</option>
+                        <option value="AB+" {% if selected_blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                        <option value="AB-" {% if selected_blood_group == "AB-" %}selected{% endif %}>AB-</option>
+                        <option value="O+" {% if selected_blood_group == "O+" %}selected{% endif %}>O+</option>
+                        <option value="O-" {% if selected_blood_group == "O-" %}selected{% endif %}>O-</option>
+                    </select>
+                </div>
+
+                <!-- Account Status Filter -->
+                <div class="col-12 col-sm-6 col-lg-2">
+                    <label for="statusFilter" class="form-label fw-semibold text-muted small">Account Status</label>
+                    <select id="statusFilter" name="status" class="form-select bg-light">
+                        <option value="" {% if not selected_status %}selected{% endif %}>All Status</option>
+                        <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Form Action Buttons -->
+                <div class="col-12 col-lg-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-deep-red rounded-pill w-100 fw-medium shadow-sm d-inline-flex align-items-center justify-content-center">
+                        <i class="bi bi-funnel-fill me-1"></i> Filter
+                    </button>
+                    <a href="{% url 'manage_donors' %}" class="btn btn-outline-secondary rounded-pill w-100 fw-medium d-inline-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- REGISTERED DONORS HEADER -->
+    <div class="d-flex align-items-center justify-content-between mb-3 px-1 animate-fade-in stagger-3">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-card-list me-2 fs-5" style="color: var(--bb-deep-red-start);"></i>
+            <h5 class="fw-bold text-dark mb-0 fs-6 text-uppercase">Registered Donors</h5>
+        </div>
+        {% if donors %}
+        <span class="badge badge-deep-red-subtle rounded-pill px-3 py-1.5 fw-bold">
+            {{ donors|length }} Donor{% if donors|length > 1 %}s{% endif %}
+        </span>
+        {% endif %}
+    </div>
+
+    <!-- DONOR CARDS GRID -->
+    {% if donors %}
+        <div class="row g-3 animate-fade-in stagger-4 mb-4">
+            {% for donor in donors %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card bb-card shadow-sm rounded-3 h-100 overflow-hidden d-flex flex-column">
+                        <div class="card-body p-4 d-flex flex-column">
+                            
+                            <!-- Profile Header -->
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3 position-relative">
+                                        {% if donor.profile_picture %}
+                                            <img src="{{ donor.profile_picture.url }}" alt="{{ donor.user.username }}" class="rounded-circle donor-avatar shadow-sm" style="border: 2px solid rgba(167, 29, 42, 0.3);" width="50" height="50">
+                                        {% else %}
+                                            <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border shadow-sm" style="width: 50px; height: 50px;">
+                                                <i class="bi bi-person-fill fs-4 text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-0 text-truncate" style="max-width: 150px;" title="{{ donor.user.get_full_name|default:donor.user.username }}">
+                                            {{ donor.user.get_full_name|default:donor.user.username }}
+                                        </h6>
+                                        <small class="text-muted">@{{ donor.user.username }}</small>
+                                    </div>
+                                </div>
+
+                                <!-- Blood Group Badge -->
+                                <div>
+                                    {% if donor.blood_group %}
+                                        <span class="badge badge-deep-red-subtle fw-bold rounded-pill px-3 py-2 fs-6 shadow-sm d-inline-flex align-items-center">
+                                            <i class="bi bi-droplet-fill me-1 pulse-heart fs-7" style="color: var(--bb-deep-red-start);"></i>{{ donor.blood_group }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-light text-muted border rounded-pill">N/A</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Details List -->
+                            <div class="donor-details flex-grow-1 d-flex flex-column justify-content-center gap-2 mb-3">
+                                <!-- Account Status -->
+                                <div class="donor-info-row p-2 rounded d-flex align-items-center justify-content-between">
+                                    <span class="text-muted small d-flex align-items-center">
+                                        <i class="bi bi-person-badge me-2 text-muted"></i> Account Status
+                                    </span>
+                                    <div>
+                                        {% if donor.user.is_active %}
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 fw-bold fs-7">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Active
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2.5 py-1 fw-bold fs-7">
+                                                <i class="bi bi-x-circle-fill me-1"></i> Inactive
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Age -->
+                                <div class="donor-info-row p-2 rounded d-flex align-items-center justify-content-between">
+                                    <span class="text-muted small d-flex align-items-center">
+                                        <i class="bi bi-calendar me-2 text-muted"></i> Age
+                                    </span>
+                                    <span class="fw-medium text-dark small">{{ donor.age|default:"--" }}</span>
+                                </div>
+
+                                <!-- Gender -->
+                                <div class="donor-info-row p-2 rounded d-flex align-items-center justify-content-between">
+                                    <span class="text-muted small d-flex align-items-center">
+                                        <i class="bi bi-gender-ambiguous me-2 text-muted"></i> Gender
+                                    </span>
+                                    <span class="fw-medium text-dark small">{{ donor.gender|default:"--" }}</span>
+                                </div>
+
+                                <!-- City -->
+                                <div class="donor-info-row p-2 rounded d-flex align-items-center justify-content-between">
+                                    <span class="text-muted small d-flex align-items-center">
+                                        <i class="bi bi-geo-alt me-2 text-muted"></i> City
+                                    </span>
+                                    <span class="fw-medium text-dark small text-truncate" style="max-width: 140px;">{{ donor.city|default:"--" }}</span>
+                                </div>
+                            </div>
+
+                            <!-- View Button -->
+                            <div class="pt-2 border-top">
+                                <a href="{% url 'view_donor' donor.id %}"
+                                   class="btn btn-outline-deep-red rounded-pill w-100 fw-medium py-1.5 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-eye-fill me-1.5"></i> View Profile
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- EMPTY STATE -->
+        <div class="card bb-card shadow-sm rounded-3 my-4 animate-fade-in stagger-4">
+            <div class="card-body text-center py-5 px-3">
+                <div class="bg-light text-muted rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm pulse-heart" style="width: 80px; height: 80px;">
+                    <i class="bi bi-people display-5 text-secondary"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">No Donors Found</h5>
+                <p class="text-muted small mb-3 ms-auto me-auto" style="max-width: 400px;">
+                    No donor records match your current search or filter criteria.
+                </p>
+                <a href="{% url 'manage_donors' %}" class="btn btn-sm btn-deep-red rounded-pill px-3 py-2 fw-medium">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- ADMIN SECURITY NOTICE -->
+    <div class="card bg-light rounded-3 p-3 shadow-sm mb-2 animate-fade-in stagger-4" style="border: 3px solid #000000;">
+        <div class="card-body p-1 d-flex align-items-center">
+            <div class="rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px; background-color: rgba(167, 29, 42, 0.1); color: var(--bb-deep-red-start);">
+                <i class="bi bi-shield-lock-fill fs-6"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold text-dark mb-0 fs-7">Protected Donor Information</h6>
+                <p class="text-muted mb-0 small" style="font-size: 0.8rem;">
+                    Donor profiles contain personal information and should only be accessed and managed by authorized BloodBridge administrators.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

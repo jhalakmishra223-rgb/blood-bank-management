@@ -1,0 +1,671 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Request Blood | BloodBridge{% endblock %}
+
+{% block content %}
+<!-- Custom Animations & Hero Styling -->
+<style>
+    /* Hero Section Background & Layout */
+    .page-header-request {
+        background: linear-gradient(135deg, #a71d2a 0%, #540911 100%);
+        position: relative;
+        overflow: hidden;
+        border-bottom: 3px solid #000;
+        padding: 4rem 0 3.5rem 0;
+    }
+
+    /* Glassmorphism Badge */
+    .hero-badge-pill-light {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Crisp White Hero Text */
+    .hero-title-white {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-desc-white {
+        color: rgba(255, 255, 255, 0.92) !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    /* Keyframe Animations */
+    @keyframes floatGraphic {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-12px) rotate(4deg); }
+    }
+
+    @keyframes pulseHeart {
+        0% { transform: scale(1); opacity: 0.85; }
+        14% { transform: scale(1.18); opacity: 1; }
+        28% { transform: scale(1); opacity: 0.85; }
+        42% { transform: scale(1.18); opacity: 1; }
+        70% { transform: scale(1); opacity: 0.85; }
+    }
+
+    @keyframes syringeInject {
+        0%, 100% { transform: translate(0, 0) rotate(-15deg); }
+        50% { transform: translate(-6px, 8px) rotate(-22deg); }
+    }
+
+    @keyframes dropGlow {
+        0%, 100% { opacity: 0.3; filter: drop-shadow(0 0 2px rgba(255,255,255,0.2)); }
+        50% { opacity: 0.7; filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)); }
+    }
+
+    /* Animation Classes */
+    .anim-pulse {
+        animation: pulseHeart 2.2s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    .anim-syringe {
+        animation: syringeInject 3.5s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    .anim-float-1 {
+        animation: floatGraphic 4s ease-in-out infinite;
+    }
+
+    .anim-float-2 {
+        animation: floatGraphic 5s ease-in-out infinite 1s;
+    }
+
+    /* Decorative Floating Ambient Icons */
+    .hero-ambient-icon {
+        position: absolute;
+        pointer-events: none;
+        color: #ffffff;
+        z-index: 1;
+    }
+</style>
+
+<!-- Redesigned Hero / Banner Section -->
+<section class="page-header-request text-center">
+    <!-- Floating Ambient Background Icons -->
+    <i class="bi bi-droplet-fill hero-ambient-icon anim-float-1" style="top: 15%; left: 6%; font-size: 4.5rem; opacity: 0.12;"></i>
+    <i class="bi bi-capsule hero-ambient-icon anim-float-2" style="bottom: 15%; left: 12%; font-size: 3.5rem; opacity: 0.1;"></i>
+    <i class="bi bi-activity hero-ambient-icon anim-float-1" style="top: 20%; right: 8%; font-size: 5rem; opacity: 0.12;"></i>
+    <i class="bi bi-hospital hero-ambient-icon anim-float-2" style="bottom: 12%; right: 14%; font-size: 3.8rem; opacity: 0.1;"></i>
+
+    <div class="container position-relative z-2">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <!-- Badge Pill -->
+                <div class="mb-3">
+                    <span class="hero-badge-pill-light">
+                        <i class="bi bi-exclamation-diamond-fill text-warning"></i>
+                        Emergency Dispatch Desk
+                    </span>
+                </div>
+
+                <!-- Animated Title with Syringe & Pulse Graphics -->
+                <h1 class="fw-extrabold display-5 mb-3 hero-title-white d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                    <i class="bi bi-prescription2 anim-syringe text-white opacity-75 d-none d-sm-inline-block" style="font-size: 2.5rem;"></i>
+                    <span>Request Blood Quickly & Securely</span>
+                    <i class="bi bi-heart-pulse-fill anim-pulse text-danger-light d-none d-sm-inline-block" style="font-size: 2.2rem;"></i>
+                </h1>
+
+                <!-- Clear High-Contrast Subtitle -->
+                <p class="lead mb-0 hero-desc-white max-width-600 mx-auto fw-normal fs-6">
+                    Submit your urgent blood requirement to connect directly with verified blood banks, hospitals, and active donors across our network.
+                </p>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Request Section (Unchanged Form & Body) -->
+<section class="section-padding pt-5">
+    <div class="container">
+        
+        <!-- Django Messages Container -->
+        {% if messages %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show rounded-3 shadow-sm d-flex align-items-center gap-2 mb-2" role="alert">
+                            {% if message.tags == 'success' %}
+                                <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+                            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                                <i class="bi bi-exclamation-triangle-fill fs-5 text-danger"></i>
+                            {% else %}
+                                <i class="bi bi-info-circle-fill fs-5 text-info"></i>
+                            {% endif %}
+                            <div>{{ message }}</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row g-4">
+            
+            <!-- Main Request Form Card -->
+            <div class="col-lg-8">
+                <div class="bb-card">
+                    <div class="border-bottom pb-3 mb-4">
+                        <span class="text-danger fw-extrabold text-uppercase tracking-wider fs-7">Dispatch Protocol</span>
+                        <h2 class="fw-extrabold h4 mt-1 mb-0">Emergency Patient Information</h2>
+                        <p class="text-muted small mb-0">Please fill out all medical and contact parameters accurately for fast approval.</p>
+                    </div>
+
+                    <form method="post" action="" novalidate id="bloodRequestForm">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger rounded-3 mb-4" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        <span>{{ error }}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Recipient Target Selection -->
+                        <div class="mb-4 p-3 bg-light rounded-3 border">
+                            <label class="form-label fw-bold text-dark fs-7 text-uppercase mb-2 d-block">
+                                <i class="bi bi-person-fill-gear text-danger me-1"></i> Who is this blood request for? <span class="text-danger">*</span>
+                            </label>
+                            
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="request_for" id="reqForMyself" value="self" checked autocomplete="off">
+                                    <label class="btn btn-outline-danger w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 fs-7" for="reqForMyself">
+                                        <i class="bi bi-person-check-fill fs-6"></i> Myself
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="request_for" id="reqForSomeoneElse" value="other" autocomplete="off">
+                                    <label class="btn btn-outline-danger w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 fs-7" for="reqForSomeoneElse">
+                                        <i class="bi bi-people-fill fs-6"></i> Someone Else
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Target Notice -->
+                        <div class="p-2 px-3 bg-light rounded-3 border mb-4 d-flex align-items-center gap-2" id="compatibilityNotice">
+                            <i class="bi bi-info-circle-fill text-danger fs-6"></i>
+                            <small class="text-muted fs-7" id="compatibilityNoticeText">
+                                Using your registered profile (<strong class="text-dark text-uppercase">{{ request.user.get_full_name|default:request.user.username }}</strong>) for patient details and inventory compatibility.
+                            </small>
+                        </div>
+
+                        <!-- COMPATIBILITY / STOCK NOTICES -->
+                        {% if no_compatible_stock %}
+                            <div class="alert alert-warning border border-warning-subtle rounded-3 d-flex align-items-start gap-3 p-3 mb-4">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 text-warning flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-dark">No Compatible Units Available</h6>
+                                    <p class="mb-0 fs-7 text-secondary">
+                                        No compatible blood units are currently available in central stock. Please try again later or contact our emergency desk.
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-3">
+                            
+                            <!-- Patient Name (Hidden/Auto-filled when "Myself", Visible when "Someone Else") -->
+                            <div class="col-md-6" id="patientNameFieldWrapper" style="display: none;">
+                                <label for="{{ form.patient_name.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Patient Full Name <span class="text-danger">*</span>
+                                </label>
+                                {{ form.patient_name }}
+                                {% if form.patient_name.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.patient_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Required Blood Group -->
+                            <div class="col-md-6" id="bloodGroupWrapper">
+
+                                <label for="id_blood_group"
+                                    class="form-label fw-bold text-dark fs-7 text-uppercase">
+
+                                    Required Blood Group
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <select name="blood_group"
+                                        id="id_blood_group"
+                                        class="form-select"
+                                        required>
+
+                                    <option value="">Select Blood Group</option>
+
+                                    {% for group in compatible_groups %}
+
+                                        <option value="{{ group }}"
+                                            {% if form.blood_group.value == group %}selected{% endif %}>
+
+                                            {{ group }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                                {% if form.blood_group.errors %}
+                                    <div class="text-danger fs-7 mt-1">
+                                        {{ form.blood_group.errors.0 }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!-- Units Required -->
+                            <div class="col-md-6">
+                                <label for="{{ form.units_required.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Units Needed (Bags) <span class="text-danger">*</span>
+                                </label>
+                                {{ form.units_required }}
+                                {% if form.units_required.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.units_required.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Urgency Level -->
+                            <div class="col-md-6">
+                                <label for="{{ form.urgency.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Urgency Status <span class="text-danger">*</span>
+                                </label>
+                                {{ form.urgency }}
+                                {% if form.urgency.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.urgency.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Hospital Name -->
+                            <div class="col-md-6">
+                                <label for="{{ form.hospital_name.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Hospital / Medical Center <span class="text-danger">*</span>
+                                </label>
+                                {{ form.hospital_name }}
+                                {% if form.hospital_name.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.hospital_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- City -->
+                            <div class="col-md-6">
+                                <label for="{{ form.city.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    City / Location <span class="text-danger">*</span>
+                                </label>
+                                {{ form.city }}
+                                {% if form.city.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.city.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Contact Phone Number -->
+                            <div class="col-md-6">
+                                <label for="{{ form.contact_number.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Attendant Contact Number <span class="text-danger">*</span>
+                                </label>
+                                {{ form.contact_number }}
+                                {% if form.contact_number.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.contact_number.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Required Date -->
+                            <div class="col-md-6">
+                                <label for="{{ form.required_date.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Date Required By <span class="text-danger">*</span>
+                                </label>
+                                {{ form.required_date }}
+                                {% if form.required_date.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.required_date.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Reason / Diagnosis -->
+                            <div class="col-12">
+                                <label for="{{ form.reason.id_for_label }}" class="form-label fw-bold text-dark fs-7 text-uppercase">
+                                    Reason / Medical Diagnosis
+                                </label>
+                                {{ form.reason }}
+                                {% if form.reason.errors %}
+                                    <div class="text-danger fs-7 mt-1">{{ form.reason.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-bb-primary w-100 py-3 fs-6" {% if no_compatible_stock %}disabled{% endif %}>
+                                <i class="bi bi-send-fill me-2"></i> Submit Priority Blood Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Emergency Information Sidebar Card -->
+            <div class="col-lg-4">
+                <div class="d-flex flex-column gap-4">
+                    
+                    <!-- Emergency Protocol Panel -->
+                    <div class="bb-card bg-danger-soft border-0">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="stat-icon-wrapper bg-white text-danger shadow-sm">
+                                <i class="bi bi-telephone-outbound-fill"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-danger text-uppercase px-2 py-1 fs-7">24/7 Hotline</span>
+                                <h5 class="fw-extrabold mb-0 mt-1">Emergency Notice</h5>
+                            </div>
+                        </div>
+                        <p class="text-muted small leading-relaxed mb-3">
+                            Critical condition requiring immediate unit transfer within the hour? Call our emergency dispatch hub directly.
+                        </p>
+                        <a href="tel:+18001234567" class="btn btn-danger w-100 fw-bold rounded-pill py-2">
+                            <i class="bi bi-headset me-2"></i> Call +1 (800) 123-4567
+                        </a>
+                    </div>
+
+                    <!-- Metrics Card -->
+                    <div class="bb-card">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2">Verification Metrics</h5>
+                        
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <div class="stat-icon-wrapper fs-6" style="width:40px; height:40px;">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block text-uppercase fs-7 fw-semibold">Avg. Response Time</small>
+                                <span class="fw-extrabold text-dark fs-6">Under 15 Minutes</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <div class="stat-icon-wrapper fs-6" style="width:40px; height:40px;">
+                                <i class="bi bi-patch-check-fill"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block text-uppercase fs-7 fw-semibold">Request Validation</small>
+                                <span class="fw-extrabold text-dark fs-6">100% Verified Hospitals</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="stat-icon-wrapper fs-6" style="width:40px; height:40px;">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block text-uppercase fs-7 fw-semibold">Coverage Area</small>
+                                <span class="fw-extrabold text-dark fs-6">Nationwide Medical Partners</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section-padding bg-light border-top border-bottom">
+    <div class="container">
+        <div class="text-center mb-5 max-width-600 mx-auto">
+            <span class="text-danger fw-extrabold text-uppercase tracking-wider fs-7">Fulfillment Workflow</span>
+            <h2 class="fw-extrabold display-6 mt-1">How Blood Requests Work</h2>
+            <p class="text-muted">Our automated network ensures your request reaches certified donors and blood banks without delay.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="bb-workflow-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="bb-impact-icon-wrapper">
+                            <i class="bi bi-file-earmark-plus"></i>
+                        </div>
+                        <span class="bb-workflow-step-badge">01</span>
+                    </div>
+                    <h4 class="fw-extrabold h5 mb-2">Submit Request</h4>
+                    <p class="text-muted small leading-relaxed mb-0">
+                        Fill in the required patient parameters, unit demands, and hospital location details accurately in the form above.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="bb-workflow-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="bb-impact-icon-wrapper">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <span class="bb-workflow-step-badge">02</span>
+                    </div>
+                    <h4 class="fw-extrabold h5 mb-2">Medical Verification</h4>
+                    <p class="text-muted small leading-relaxed mb-0">
+                        Our dispatch desk instantly verifies patient urgency and authenticates the hospital setup to prevent fraud.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="bb-workflow-card h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="bb-impact-icon-wrapper">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <span class="bb-workflow-step-badge">03</span>
+                    </div>
+                    <h4 class="fw-extrabold h5 mb-2">Blood Allocation</h4>
+                    <p class="text-muted small leading-relaxed mb-0">
+                        Matched units are reserved from certified bank inventory or priority donor alerts are broadcasted immediately.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final Call To Action Banner -->
+<section class="section-padding">
+    <div class="container">
+        <div class="bb-emergency-banner-card text-white text-center">
+            <div class="max-width-800 mx-auto">
+                <span class="hero-badge-pill mb-3">
+                    <span class="bb-emergency-dot me-2"></span> Become An Everyday Hero
+                </span>
+                <h2 class="hero-display-title mb-3 fs-2">Ready to Save Lives as a Voluntary Donor?</h2>
+                <p class="hero-subtitle mx-auto mb-4 fs-6">
+                    Join thousands of registered donors who give someone a second chance at life. Your single donation can save up to 3 patients.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'signup' %}" class="btn-hero-white">
+                        <i class="bi bi-person-plus-fill me-1"></i> Become Donor
+                    </a>
+                    <a href="{% url 'blood_inventory' %}" class="btn-hero-outline-white">
+                        <i class="bi bi-card-checklist me-1"></i> View Inventory
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Django data for JavaScript -->
+{{ compatible_groups|json_script:"compatible-groups-data" }}
+{{ all_blood_groups|json_script:"all-blood-groups-data" }}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ------------------------------------
+    // Get HTML elements
+    // ------------------------------------
+
+    const radioMyself = document.getElementById("reqForMyself");
+    const radioSomeoneElse = document.getElementById("reqForSomeoneElse");
+    const patientNameWrapper = document.getElementById("patientNameFieldWrapper");
+    const patientNameInput = document.querySelector("#patientNameFieldWrapper input");
+    const noticeText = document.getElementById("compatibilityNoticeText");
+    const bloodGroupSelect = document.getElementById("id_blood_group");
+
+    // Guard against missing required elements
+    if (!radioMyself || !radioSomeoneElse || !bloodGroupSelect) {
+        return;
+    }
+
+    // ------------------------------------
+    // Logged-in user's name
+    // ------------------------------------
+
+    const loggedInUserName = "{{ request.user.get_full_name|default:request.user.username|default:''|escapejs }}";
+
+    // ------------------------------------
+    // Get blood groups from Django
+    // ------------------------------------
+
+    let compatibleGroups = [];
+    let allBloodGroups = [];
+
+    const compDataElem = document.getElementById("compatible-groups-data");
+    const allDataElem = document.getElementById("all-blood-groups-data");
+
+    if (compDataElem) {
+        try {
+            compatibleGroups = JSON.parse(compDataElem.textContent);
+        } catch (e) {
+            console.error("Error parsing compatible groups data:", e);
+        }
+    }
+
+    if (allDataElem) {
+        try {
+            allBloodGroups = JSON.parse(allDataElem.textContent);
+        } catch (e) {
+            console.error("Error parsing all blood groups data:", e);
+        }
+    }
+
+    // ------------------------------------
+    // Function to update request fields
+    // ------------------------------------
+
+    function toggleRequestFields() {
+
+        // Store current value to re-select if available in new list
+        const currentSelectedValue = bloodGroupSelect.value;
+
+        // Decide which blood groups to show
+        const selectedGroups = radioSomeoneElse.checked
+            ? allBloodGroups
+            : compatibleGroups;
+
+        // Clear existing options efficiently
+        bloodGroupSelect.options.length = 0;
+
+        // Add default placeholder option
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Select Blood Group";
+        bloodGroupSelect.appendChild(defaultOption);
+
+        // Add blood group options
+        selectedGroups.forEach(function (group) {
+            const option = document.createElement("option");
+            option.value = group;
+            option.textContent = group;
+            if (group === currentSelectedValue) {
+                option.selected = true;
+            }
+            bloodGroupSelect.appendChild(option);
+        });
+
+        // ====================================
+        // SOMEONE ELSE
+        // ====================================
+        if (radioSomeoneElse.checked) {
+
+            if (patientNameWrapper) {
+                patientNameWrapper.style.display = "block";
+            }
+
+            if (patientNameInput) {
+                patientNameInput.value = "";
+                patientNameInput.required = true;
+            }
+
+            if (noticeText) {
+                noticeText.innerHTML =
+                    "Specify the patient's required blood group below. " +
+                    "All blood groups are available for selection " +
+                    "because this request is for another person.";
+            }
+
+        }
+
+        // ====================================
+        // MYSELF
+        // ====================================
+        else {
+
+            if (patientNameWrapper) {
+                patientNameWrapper.style.display = "none";
+            }
+
+            if (patientNameInput) {
+                patientNameInput.value = loggedInUserName;
+                patientNameInput.required = false;
+            }
+
+            if (noticeText) {
+                noticeText.innerHTML =
+                    "Using your registered profile " +
+                    "(<strong>" + loggedInUserName + "</strong>). " +
+                    "Only blood groups compatible with your " +
+                    "registered blood group are shown.";
+            }
+
+        }
+
+    }
+
+    // ------------------------------------
+    // Event listeners
+    // ------------------------------------
+
+    radioMyself.addEventListener("change", toggleRequestFields);
+    radioSomeoneElse.addEventListener("change", toggleRequestFields);
+
+    // ------------------------------------
+    // Initial setup
+    // ------------------------------------
+
+    toggleRequestFields();
+
+});
+</script>
+
+{% endblock %}

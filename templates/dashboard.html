@@ -1,0 +1,858 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Custom Page-Specific Styles & Keyframe Animations -->
+<style>
+  /* Base Dashboard Background */
+  .dashboard-wrapper {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+
+  /* ----------------------------------------------------
+     1. HERO SECTION (DEEP RED THEME + RIGHT-ALIGNED AVATAR)
+  ---------------------------------------------------- */
+  .hero-cover-container {
+    position: relative;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: linear-gradient(135deg, #4a0000 0%, #700000 35%, #8b0000 70%, #a71d2a 100%);
+    box-shadow: 0 15px 35px rgba(112, 0, 0, 0.25);
+    margin-bottom: 2.5rem;
+  }
+
+  /* Blurred Profile Background Layer Filtered over Deep Red */
+  .hero-blur-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(32px) brightness(0.28) saturate(1.5);
+    transform: scale(1.15);
+    z-index: 1;
+    opacity: 0.8;
+  }
+
+  /* Subtle Red Vector Overlay */
+  .hero-pattern-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.5;
+  }
+
+  /* Hero Content Layout */
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    padding: 3rem 2.5rem;
+  }
+
+  /* Profile Avatar (Positioned on the Right Side) */
+  .profile-avatar-right-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media (min-width: 992px) {
+    .profile-avatar-right-container {
+      justify-content: flex-end;
+    }
+  }
+
+  .profile-avatar-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    object-fit: cover;
+    background-color: #ffffff;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .profile-avatar-img:hover {
+    transform: scale(1.05);
+  }
+
+  .profile-avatar-placeholder {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+  }
+
+  /* Hero Badge */
+  .hero-pulse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    padding: 0.4rem 1rem;
+    border-radius: 50rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* ----------------------------------------------------
+     2. ENTRANCE & KEYFRAME ANIMATIONS
+  ---------------------------------------------------- */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .delay-1 { animation-delay: 0.15s; fill-mode: backwards; }
+  .delay-2 { animation-delay: 0.3s; fill-mode: backwards; }
+  .delay-3 { animation-delay: 0.45s; fill-mode: backwards; }
+  .delay-4 { animation-delay: 0.6s; fill-mode: backwards; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 0.999;
+      transform: translateY(0);
+    }
+  }
+
+  /* Icon Micro-Animations */
+  .anim-pulse {
+    animation: iconPulse 2.2s infinite ease-in-out;
+  }
+  .anim-beat {
+    animation: iconBeat 1.4s infinite ease-in-out;
+  }
+  .anim-float {
+    animation: iconFloat 3s infinite ease-in-out;
+  }
+  .anim-bounce {
+    animation: iconBounce 2s infinite ease-in-out;
+  }
+
+  @keyframes iconPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.12); opacity: 0.85; }
+  }
+
+  @keyframes iconBeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.18); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.14); }
+    70% { transform: scale(1); }
+  }
+
+  @keyframes iconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  /* ----------------------------------------------------
+     3. OVERVIEW STATISTICAL CARDS
+  ---------------------------------------------------- */
+  .stat-card-custom {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .stat-card-custom:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .stat-card-status {
+    border: 2px solid rgba(139, 0, 0, 0.2);
+    box-shadow: 0 6px 16px rgba(139, 0, 0, 0.05);
+  }
+  .stat-card-status::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: #8b0000;
+  }
+
+  .stat-card-blood {
+    border: 2px solid rgba(220, 53, 69, 0.25);
+    background: linear-gradient(180deg, #ffffff 0%, #fff5f5 100%);
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.06);
+  }
+  .stat-card-blood::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: #dc3545;
+  }
+
+  .stat-card-city {
+    border: 2px solid rgba(13, 202, 240, 0.25);
+    box-shadow: 0 6px 16px rgba(13, 202, 240, 0.05);
+  }
+  .stat-card-city::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: #0dcaf0;
+  }
+
+  .stat-card-completion {
+    border: 2px solid rgba(255, 193, 7, 0.3);
+    box-shadow: 0 6px 16px rgba(255, 193, 7, 0.05);
+  }
+  .stat-card-completion::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: #ffc107;
+  }
+
+  .stat-icon-bubble {
+    width: 50px;
+    height: 50px;
+    border-radius: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ----------------------------------------------------
+     4. QUICK ACTION CARDS (PROMINENT BLACK BORDER)
+  ---------------------------------------------------- */
+  .action-card {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    height: 100%;
+    /* Distinct broad black border */
+    border: 2px solid #212529 !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none !important;
+  }
+
+  .action-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(139, 0, 0, 0.18) !important;
+    border-color: #8b0000 !important; /* Transitions to Blood Red on hover */
+  }
+
+  .action-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    border-radius: 50rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Complete Profile Highlight Card */
+  .action-card-highlight {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+    border: 2px solid #212529 !important;
+  }
+
+  /* ----------------------------------------------------
+     5. DONOR PROFILE DETAILS CARD
+  ---------------------------------------------------- */
+  .profile-detail-badge {
+    background: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
+
+  /* ----------------------------------------------------
+     6. MOTIVATIONAL BANNER
+  ---------------------------------------------------- */
+  .motivation-banner {
+    background: linear-gradient(135deg, #700000 0%, #8b0000 50%, #dc3545 100%);
+    border-radius: 1.5rem;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(112, 0, 0, 0.25);
+  }
+
+  .motivation-banner::after {
+    content: '\F30A';
+    font-family: 'bootstrap-icons';
+    position: absolute;
+    right: -20px;
+    bottom: -30px;
+    font-size: 14rem;
+    color: rgba(255, 255, 255, 0.06);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in, .animate-slide-up, .anim-pulse, .anim-beat, .anim-float, .anim-bounce {
+      animation: none !important;
+    }
+    .stat-card-custom, .action-card, .profile-avatar-img {
+      transition: none !important;
+    }
+  }
+</style>
+
+<div class="dashboard-wrapper py-4 py-md-5">
+  <div class="container">
+
+    <!-- =========================================================
+         1. HERO SECTION: UNIFORM DEEP RED PROFILE COVER
+    ========================================================= -->
+    <div class="hero-cover-container animate-fade-in">
+      
+      <!-- Blurred Profile Image Overlay with Deep Red Tint -->
+      {% if donor.profile_picture %}
+        <div class="hero-blur-bg" style="background-image: url('{{ donor.profile_picture.url }}');"></div>
+      {% else %}
+        <div class="hero-pattern-overlay"></div>
+      {% endif %}
+
+      <!-- Hero Main Content Grid -->
+      <div class="hero-content">
+        <div class="row align-items-center g-4">
+          
+          <!-- Left Side: Welcome Info & Actions -->
+          <div class="col-lg-8 text-center text-lg-start animate-slide-up delay-1">
+            
+            <div class="hero-pulse-badge mb-3">
+              <i class="bi bi-droplet-fill text-white anim-pulse"></i>
+              <span>Donor Dashboard</span>
+            </div>
+
+            <h1 class="display-5 fw-bold text-white mb-2">
+              Welcome, 
+              <span>
+                {% if request.user.first_name %}
+                  {{ request.user.first_name }}
+                {% else %}
+                  {{ request.user.username }}
+                {% endif %}
+              </span>
+            </h1>
+
+            <p class="text-white-50 lead mb-3 fs-6 fs-md-5">
+              Manage your donor profile and blood donation activities seamlessly.
+            </p>
+
+            <!-- Inline Donor Summary Pills -->
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-2 text-white small">
+              <span class="bg-black bg-opacity-25 px-3 py-1 rounded-pill border border-white border-opacity-25">
+                <i class="bi bi-shield-check me-1 text-danger"></i> Registered Donor
+              </span>
+              {% if donor.blood_group %}
+                <span class="bg-black bg-opacity-25 px-3 py-1 rounded-pill border border-white border-opacity-25">
+                  <i class="bi bi-droplet-half me-1 text-danger"></i> {{ donor.blood_group }}
+                </span>
+              {% endif %}
+              {% if donor.city %}
+                <span class="bg-black bg-opacity-25 px-3 py-1 rounded-pill border border-white border-opacity-25">
+                  <i class="bi bi-geo-alt-fill me-1 text-danger"></i> {{ donor.city }}
+                </span>
+              {% endif %}
+            </div>
+
+            <!-- Hero Action Buttons -->
+            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start mt-4">
+              <a href="{% url 'donate_blood' %}" class="btn btn-light btn-lg px-4 py-2 rounded-pill fw-bold text-danger shadow-sm">
+                <i class="bi bi-heart-fill me-2"></i> Donate Blood
+              </a>
+              <a href="{% url 'request_blood' %}" class="btn btn-outline-light btn-lg px-4 py-2 rounded-pill fw-semibold">
+                <i class="bi bi-heart-pulse-fill me-2"></i> Request Blood
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Right Side: Circular Avatar Positioned In Hero Grid -->
+          <div class="col-lg-4 profile-avatar-right-container animate-slide-up delay-2">
+            {% if donor.profile_picture %}
+              <img src="{{ donor.profile_picture.url }}" 
+                   alt="{{ request.user.username }}'s Profile Picture" 
+                   class="profile-avatar-img">
+            {% else %}
+              <div class="profile-avatar-placeholder">
+                <i class="bi bi-person-fill"></i>
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         2. STATISTICS & PROFILE SUMMARY CARDS
+    ========================================================= -->
+    <div class="mb-5 pt-2">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h4 class="fw-bold text-dark mb-1">Your BloodBridge Overview</h4>
+          <p class="text-muted small mb-0">Real-time summary of your account and profile status</p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- CARD 1: PROFILE STATUS -->
+        <div class="col-sm-6 col-lg-3 animate-slide-up delay-1">
+          <div class="stat-card-custom stat-card-status">
+            <div>
+              <div class="stat-icon-bubble bg-danger-subtle text-danger">
+                <i class="bi bi-shield-check anim-beat"></i>
+              </div>
+              <p class="text-muted fw-bold text-uppercase mb-1 small" style="letter-spacing: 0.5px;">
+                Profile Status
+              </p>
+              <div class="mt-2">
+                {% if donor.age and donor.phone and donor.blood_group %}
+                  <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fs-6 fw-semibold">
+                    <i class="bi bi-check-circle-fill me-1"></i> Active
+                  </span>
+                {% else %}
+                  <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2 fs-6 fw-semibold">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Incomplete
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+            <small class="text-muted mt-3 pt-2 border-top d-block">Verification Status</small>
+          </div>
+        </div>
+
+        <!-- CARD 2: BLOOD GROUP -->
+        <div class="col-sm-6 col-lg-3 animate-slide-up delay-2">
+          <div class="stat-card-custom stat-card-blood">
+            <div>
+              <div class="stat-icon-bubble bg-danger text-white shadow-sm">
+                <i class="bi bi-droplet-half anim-pulse"></i>
+              </div>
+              <p class="text-muted fw-bold text-uppercase mb-1 small" style="letter-spacing: 0.5px;">
+                Blood Group
+              </p>
+              <h2 class="fw-bold text-danger mb-0">
+                {% if donor.blood_group %}
+                  {{ donor.blood_group }}
+                {% else %}
+                  <span class="fs-6 text-muted fw-normal">Not Updated</span>
+                {% endif %}
+              </h2>
+            </div>
+            <small class="text-muted mt-3 pt-2 border-top d-block">Registered Type</small>
+          </div>
+        </div>
+
+        <!-- CARD 3: CITY LOCATION -->
+        <div class="col-sm-6 col-lg-3 animate-slide-up delay-3">
+          <div class="stat-card-custom stat-card-city">
+            <div>
+              <div class="stat-icon-bubble bg-info-subtle text-info-emphasis">
+                <i class="bi bi-geo-alt-fill anim-float"></i>
+              </div>
+              <p class="text-muted fw-bold text-uppercase mb-1 small" style="letter-spacing: 0.5px;">
+                City
+              </p>
+              <h3 class="fw-bold text-dark mb-0 text-truncate">
+                {% if donor.city %}
+                  {{ donor.city }}
+                {% else %}
+                  <span class="fs-6 text-muted fw-normal">Not Updated</span>
+                {% endif %}
+              </h3>
+            </div>
+            <small class="text-muted mt-3 pt-2 border-top d-block">Current Location</small>
+          </div>
+        </div>
+
+        <!-- CARD 4: PROFILE COMPLETION -->
+        <div class="col-sm-6 col-lg-3 animate-slide-up delay-4">
+          <div class="stat-card-custom stat-card-completion">
+            <div>
+              <div class="stat-icon-bubble bg-warning-subtle text-warning-emphasis">
+                <i class="bi bi-person-check-fill anim-bounce"></i>
+              </div>
+              <p class="text-muted fw-bold text-uppercase mb-1 small" style="letter-spacing: 0.5px;">
+                Profile Completion
+              </p>
+              <h3 class="fw-bold text-dark mb-2">
+                {{ profile_completion }}%
+              </h3>
+              <div class="progress" style="height: 8px; border-radius: 10rem;">
+                <div class="progress-bar bg-danger" 
+                     role="progressbar" 
+                     style="width: {{ profile_completion }}%;" 
+                     aria-valuenow="{{ profile_completion }}" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 pt-2 border-top">
+              {% if profile_completion == 100 %}
+                <small class="text-success fw-semibold"><i class="bi bi-check-circle-fill me-1"></i> Profile Completed</small>
+              {% elif profile_completion >= 60 %}
+                <small class="text-warning-emphasis fw-semibold"><i class="bi bi-pencil-fill me-1"></i> Almost there!</small>
+              {% else %}
+                <small class="text-danger fw-semibold"><i class="bi bi-exclamation-circle-fill me-1"></i> Please complete details</small>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         3. QUICK ACTIONS GRID (BROAD BLACK BORDERS & ANIMATIONS)
+    ========================================================= -->
+    <div class="mb-5">
+      <div class="d-flex align-items-center mb-4">
+        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 42px; height: 42px;">
+          <i class="bi bi-grid-fill"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-0 text-dark">Quick Actions</h4>
+          <small class="text-muted">Access core donor services and account management</small>
+        </div>
+      </div>
+
+      <div class="row g-4">
+
+        {% if profile_completed %}
+          <!-- 1. View Profile -->
+          <div class="col-md-6 col-lg-3 animate-slide-up delay-1">
+            <a href="{% url 'profile' %}" class="action-card">
+              <div>
+                <div class="action-icon-wrapper bg-light text-dark">
+                  <i class="bi bi-person-bounding-box anim-float"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">View Profile</h5>
+                <p class="text-muted small mb-3">Check your donor information.</p>
+              </div>
+              <span class="btn btn-sm btn-outline-dark w-100 rounded-pill fw-semibold">
+                Open Profile
+              </span>
+            </a>
+          </div>
+
+          <!-- 2. Edit Profile -->
+          <div class="col-md-6 col-lg-3 animate-slide-up delay-2">
+            <a href="{% url 'edit_profile' %}" class="action-card">
+              <div>
+                <div class="action-icon-wrapper bg-light text-dark">
+                  <i class="bi bi-pencil-square anim-bounce"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">Edit Profile</h5>
+                <p class="text-muted small mb-3">Update your donor information.</p>
+              </div>
+              <span class="btn btn-sm btn-outline-dark w-100 rounded-pill fw-semibold">
+                Edit Details
+              </span>
+            </a>
+          </div>
+        {% else %}
+          <!-- Complete Profile -->
+          <div class="col-md-12 col-lg-6 animate-slide-up delay-1">
+            <a href="{% url 'complete_profile' %}" class="action-card action-card-highlight">
+              <div>
+                <div class="action-icon-wrapper bg-warning text-dark shadow-sm">
+                  <i class="bi bi-person-plus-fill anim-pulse"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-1">Complete Profile</h4>
+                <p class="text-muted small mb-3">
+                  Please complete your donor profile before using BloodBridge services.
+                </p>
+              </div>
+              <div>
+                <span class="btn btn-warning btn-sm w-100 rounded-pill fw-bold text-dark shadow-sm">
+                  Complete Profile Now <i class="bi bi-arrow-right ms-1"></i>
+                </span>
+              </div>
+            </a>
+          </div>
+        {% endif %}
+
+        <!-- 3. Change Password -->
+        <div class="col-md-6 col-lg-3 animate-slide-up delay-3">
+          <a href="{% url 'change_password' %}" class="action-card">
+            <div>
+              <div class="action-icon-wrapper bg-light text-dark">
+                <i class="bi bi-key-fill anim-float"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">Change Password</h5>
+              <p class="text-muted small mb-3">Update your account password.</p>
+            </div>
+            <span class="btn btn-sm btn-outline-dark w-100 rounded-pill fw-semibold">
+              Security Settings
+            </span>
+          </a>
+        </div>
+
+        <!-- 4. Donate Blood -->
+        <div class="col-md-6 col-lg-3 animate-slide-up delay-4">
+          <a href="{% url 'donate_blood' %}" class="action-card">
+            <div>
+              <div class="action-icon-wrapper bg-danger text-white shadow-sm">
+                <i class="bi bi-heart-fill anim-beat"></i>
+              </div>
+              <h5 class="fw-bold text-danger mb-1">Donate Blood</h5>
+              <p class="text-muted small mb-3">Submit a blood donation request and help save lives.</p>
+            </div>
+            <span class="btn btn-sm btn-danger w-100 rounded-pill fw-bold">
+              Donate Now
+            </span>
+          </a>
+        </div>
+
+        <!-- 5. My Donations -->
+        <div class="col-md-6 col-lg-3 animate-slide-up delay-1">
+          <a href="{% url 'my_donations' %}" class="action-card">
+            <div>
+              <div class="action-icon-wrapper bg-danger-subtle text-danger">
+                <i class="bi bi-clock-history anim-bounce"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">My Donations</h5>
+              <p class="text-muted small mb-3">View your blood donation history and donation status.</p>
+            </div>
+            <span class="btn btn-sm btn-outline-danger w-100 rounded-pill fw-semibold">
+              View History
+            </span>
+          </a>
+        </div>
+
+        <!-- 6. Blood Inventory -->
+        <div class="col-md-6 col-lg-3 animate-slide-up delay-2">
+          <a href="{% url 'blood_inventory' %}" class="action-card">
+            <div>
+              <div class="action-icon-wrapper bg-light text-dark">
+                <i class="bi bi-box-seam-fill anim-float"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">Blood Inventory</h5>
+              <p class="text-muted small mb-3">View live blood stock available in BloodBridge.</p>
+            </div>
+            <span class="btn btn-sm btn-outline-dark w-100 rounded-pill fw-semibold">
+              Check Stock
+            </span>
+          </a>
+        </div>
+
+        <!-- 7. Request Blood -->
+        <div class="col-md-6 col-lg-3 animate-slide-up delay-3">
+          <a href="{% url 'request_blood' %}" class="action-card">
+            <div>
+              <div class="action-icon-wrapper bg-danger text-white shadow-sm">
+                <i class="bi bi-heart-pulse-fill anim-pulse"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">Request Blood</h5>
+              <p class="text-muted small mb-3">Submit a blood request for yourself or a patient.</p>
+            </div>
+            <span class="btn btn-sm btn-danger w-100 rounded-pill fw-bold">
+              Submit Request
+            </span>
+          </a>
+        </div>
+
+        <!-- 8. My Requests -->
+        <div class="col-md-6 col-lg-3 animate-slide-up delay-4">
+          <a href="{% url 'my_requests' %}" class="action-card">
+            <div>
+              <div class="action-icon-wrapper bg-primary-subtle text-primary">
+                <i class="bi bi-clipboard2-pulse-fill anim-bounce"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">My Requests</h5>
+              <p class="text-muted small mb-3">Track the status of all your submitted blood requests.</p>
+            </div>
+            <span class="btn btn-sm btn-outline-primary w-100 rounded-pill fw-semibold">
+              Track Status
+            </span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         4. DETAILED DONOR SUMMARY
+    ========================================================= -->
+    <div class="mb-5 animate-slide-up delay-2">
+      <div class="bg-white rounded-4 p-4 shadow-sm border border-2 border-dark border-opacity-25">
+        <div class="d-flex flex-wrap align-items-center justify-content-between pb-3 mb-4 border-bottom gap-3">
+          <div class="d-flex align-items-center">
+            <div class="bg-danger text-white rounded-3 p-2 me-3">
+              <i class="bi bi-person-lines-fill fs-5"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0 text-dark">Donor Profile Summary</h5>
+              <p class="text-muted small mb-0">Your registered details in the BloodBridge network</p>
+            </div>
+          </div>
+          <div>
+            {% if profile_completed %}
+              <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-outline-danger rounded-pill fw-semibold px-3">
+                <i class="bi bi-pencil me-1"></i> Edit Profile
+              </a>
+            {% else %}
+              <a href="{% url 'complete_profile' %}" class="btn btn-sm btn-warning rounded-pill fw-bold text-dark px-3">
+                <i class="bi bi-plus-circle me-1"></i> Complete Profile
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-sm-6 col-md-4">
+            <div class="profile-detail-badge">
+              <span class="text-muted small d-block">Full Name</span>
+              <strong class="text-dark fs-6">
+                {% if request.user.get_full_name %}
+                  {{ request.user.get_full_name }}
+                {% else %}
+                  {{ request.user.username }}
+                {% endif %}
+              </strong>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="profile-detail-badge">
+              <span class="text-muted small d-block">Blood Group</span>
+              <strong class="text-danger fs-6">
+                {% if donor.blood_group %}
+                  {{ donor.blood_group }}
+                {% else %}
+                  <span class="text-muted fw-normal">Not Provided</span>
+                {% endif %}
+              </strong>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="profile-detail-badge">
+              <span class="text-muted small d-block">Age</span>
+              <strong class="text-dark fs-6">
+                {% if donor.age %}
+                  {{ donor.age }} Years
+                {% else %}
+                  <span class="text-muted fw-normal">Not Provided</span>
+                {% endif %}
+              </strong>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="profile-detail-badge">
+              <span class="text-muted small d-block">Contact Phone</span>
+              <strong class="text-dark fs-6">
+                {% if donor.phone %}
+                  {{ donor.phone }}
+                {% else %}
+                  <span class="text-muted fw-normal">Not Provided</span>
+                {% endif %}
+              </strong>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="profile-detail-badge">
+              <span class="text-muted small d-block">City</span>
+              <strong class="text-dark fs-6">
+                {% if donor.city %}
+                  {{ donor.city }}
+                {% else %}
+                  <span class="text-muted fw-normal">Not Provided</span>
+                {% endif %}
+              </strong>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="profile-detail-badge">
+              <span class="text-muted small d-block">State</span>
+              <strong class="text-dark fs-6">
+                {% if donor.state %}
+                  {{ donor.state }}
+                {% else %}
+                  <span class="text-muted fw-normal">Not Provided</span>
+                {% endif %}
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         5. MOTIVATIONAL CTA BANNER
+    ========================================================= -->
+    <div class="motivation-banner p-4 p-md-5 mb-4 animate-slide-up delay-3">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <span class="badge bg-white text-danger fw-bold px-3 py-2 rounded-pill mb-3 shadow-sm">
+            <i class="bi bi-heart-fill me-1"></i> Save Lives
+          </span>
+          <h3 class="fw-bold text-white mb-2">
+            "Your Blood Can Give Someone Another Tomorrow"
+          </h3>
+          <p class="text-white-50 lead mb-4 mb-lg-0 fs-6">
+            Every donation strengthens our local medical response and ensures emergency patients get critical care when time matters most.
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <div class="d-flex flex-column flex-sm-row flex-lg-column gap-2 justify-content-center">
+            <a href="{% url 'donate_blood' %}" class="btn btn-light btn-lg rounded-pill fw-bold text-danger shadow-sm">
+              <i class="bi bi-heart-fill me-2"></i> Donate Blood
+            </a>
+            <a href="{% url 'request_blood' %}" class="btn btn-outline-light btn-lg rounded-pill fw-semibold">
+              <i class="bi bi-heart-pulse-fill me-2"></i> Request Blood
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

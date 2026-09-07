@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Donors | BloodBridge
+{% endblock %}
+
+{% block content %}
+<div class="main-content pb-5 overflow-hidden bg-page-body">
+
+    <!-- ============================================================
+         1. HERO SECTION (Primary #dc3545 Brand Red Header) - Left Unchanged
+    ============================================================ -->
+    <section class="page-header bg-brand-red py-5 mb-5 shadow-sm position-relative">
+        <div class="container py-lg-4">
+            <div class="row align-items-center gy-5">
+
+                <!-- Hero Text & CTA -->
+                <div class="col-lg-7 text-white">
+                    <span class="badge bg-white text-brand-red px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm animate-fade-in-up">
+                        <i class="bi bi-heart-fill text-brand-red me-1 pulse-icon"></i>
+                        GIVE HOPE, GIVE LIFE
+                    </span>
+
+                    <h1 class="display-4 fw-bold mb-3 animate-fade-in-up animate-delay-1">
+                        Protect Smiles. <br class="d-none d-md-inline">Save Real Futures.
+                    </h1>
+
+                    <p class="lead text-white-50 mb-4 me-lg-4 animate-fade-in-up animate-delay-2" style="max-width: 620px;">
+                        Behind every request is a family, a child, or a neighbor holding out hope. 
+                        Your donation creates second chances, vibrant futures, and endless reasons to smile.
+                    </p>
+
+                    <!-- Buttons -->
+                    <div class="d-flex flex-column flex-sm-row gap-3 animate-fade-in-up animate-delay-3">
+                        <a href="{% url 'donate_blood' %}"
+                           class="btn btn-light text-brand-red btn-lg rounded-pill px-4 shadow-sm fw-bold hover-lift">
+                            <i class="bi bi-heart-pulse-fill me-2"></i>
+                            Become a Donor Today
+                        </a>
+
+                        <a href="{% url 'blood_inventory' %}"
+                           class="btn btn-outline-light btn-lg rounded-pill px-4 shadow-sm hover-lift">
+                            <i class="bi bi-box-seam-fill me-2"></i>
+                            View Blood Availability
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="col-lg-5 text-center">
+                    <div class="hero-img-wrapper animate-float">
+                        <img src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQwzY-QadySadsLr-Xddww7U6Dhau1rX-bK3qCPKrsNbXeYu7aXfQFvsAcNFMbujY-VAZbdn--O68lw0F4" 
+                             alt="Smiling children representing healthy futures" 
+                             class="img-fluid rounded-4 hero-img border border-3 border-white shadow">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <!-- ============================================================
+             2. WHY DONATE (Cards with Black Borders & Enhanced Shadows)
+        ============================================================ -->
+        <section class="mb-5">
+            <div class="text-center mb-5 animate-fade-in-up">
+                <span class="badge badge-brand-subtle px-3 py-2 rounded-pill fw-bold border border-dark shadow-sm">
+                    <i class="bi bi-stars me-1"></i>
+                    OUR IMPACT
+                </span>
+
+                <h2 class="fw-bold mt-3 mb-2">How Your Generosity Changes Lives</h2>
+
+                <p class="text-muted mb-0 mx-auto" style="max-width: 600px;">
+                    Donating blood is simple, safe, and profoundly transformative for patients and their loved ones.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Card 1 -->
+                <div class="col-md-4">
+                    <div class="card h-100 bg-white border border-2 border-dark shadow hover-lift p-4 text-center rounded-4">
+                        <div class="rounded-circle bg-white text-brand-red shadow-sm
+                                    d-inline-flex align-items-center
+                                    justify-content-center mx-auto mb-4 border border-2 border-dark"
+                             style="width:75px;height:75px;">
+                            <i class="bi bi-sun-fill fs-2 text-brand-red"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3">Brighten Futures</h4>
+
+                        <p class="text-muted mb-0">
+                            Voluntary donors ensure that mothers, newborn babies, and pediatric emergency cases get urgent care to live healthy lives.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="col-md-4">
+                    <div class="card h-100 bg-white border border-2 border-dark shadow hover-lift p-4 text-center rounded-4">
+                        <div class="rounded-circle bg-white text-brand-red shadow-sm
+                                    d-inline-flex align-items-center
+                                    justify-content-center mx-auto mb-4 border border-2 border-dark"
+                             style="width:75px;height:75px;">
+                            <i class="bi bi-people-fill fs-2 text-brand-red"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3">Strengthen Communities</h4>
+
+                        <p class="text-muted mb-0">
+                            A connected donor network guarantees no hospital or family is left stranded during critical healthcare emergencies.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-md-4">
+                    <div class="card h-100 bg-white border border-2 border-dark shadow hover-lift p-4 text-center rounded-4">
+                        <div class="rounded-circle bg-white text-brand-red shadow-sm
+                                    d-inline-flex align-items-center
+                                    justify-content-center mx-auto mb-4 border border-2 border-dark"
+                             style="width:75px;height:75px;">
+                            <i class="bi bi-shield-checkmark-fill fs-2 text-brand-red"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3">Peace of Mind</h4>
+
+                        <p class="text-muted mb-0">
+                            Every donor undergoes a physical wellness checkup prior to donating, ensuring complete safety for everyone.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             3. DONOR ELIGIBILITY (Cards with Black Borders & Enhanced Shadows)
+        ============================================================ -->
+        <section class="mb-5">
+            <div class="text-center mb-5">
+                <span class="badge badge-brand-subtle px-3 py-2 rounded-pill fw-bold border border-dark shadow-sm">
+                    <i class="bi bi-patch-check-fill me-1"></i>
+                    ELIGIBILITY
+                </span>
+
+                <h2 class="fw-bold mt-3 mb-2">Basic Donor Requirements</h2>
+
+                <p class="text-muted mb-0">
+                    Verify these physical standards before beginning your donation journey.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Requirement 1 -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="p-4 rounded-4 bg-white border border-2 border-dark shadow hover-lift text-center h-100">
+                        <i class="bi bi-calendar-event text-brand-red display-5 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Age</h5>
+                        <p class="text-muted mb-0">
+                            Must be between <strong>18 and 65 years</strong> old.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Requirement 2 -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="p-4 rounded-4 bg-white border border-2 border-dark shadow hover-lift text-center h-100">
+                        <i class="bi bi-speedometer2 text-brand-red display-5 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Weight</h5>
+                        <p class="text-muted mb-0">
+                            Must weigh at least <strong>50 kg</strong> or more.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Requirement 3 -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="p-4 rounded-4 bg-white border border-2 border-dark shadow hover-lift text-center h-100">
+                        <i class="bi bi-emoji-smile text-brand-red display-5 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Good Health</h5>
+                        <p class="text-muted mb-0">
+                            Feeling energetic and healthy on the day of donation.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Requirement 4 -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="p-4 rounded-4 bg-white border border-2 border-dark shadow hover-lift text-center h-100">
+                        <i class="bi bi-card-heading text-brand-red display-5 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Valid ID</h5>
+                        <p class="text-muted mb-0">
+                            Bring a government photo ID or donor card.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             4. HOW IT WORKS (Numbered Flow Cards with Black Borders & Shadows)
+        ============================================================ -->
+        <section class="mb-5">
+            <div class="text-center mb-5">
+                <span class="badge bg-dark text-white px-3 py-2 rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-diagram-3-fill me-1"></i>
+                    SIMPLE STEPS
+                </span>
+
+                <h2 class="fw-bold mt-3 mb-2">How Blood Donation Works</h2>
+
+                <p class="text-muted mb-0">
+                    A smooth, organized experience designed for your total comfort.
+                </p>
+            </div>
+
+            <div class="row g-4 text-center">
+                <!-- Step 1 -->
+                <div class="col-md-3">
+                    <div class="position-relative p-4 bg-white rounded-4 shadow border border-2 border-dark h-100 hover-lift">
+                        <div class="rounded-circle bg-brand-red text-white border border-2 border-dark
+                                    d-inline-flex align-items-center
+                                    justify-content-center fw-bold fs-4 mb-3 shadow-sm"
+                             style="width:60px;height:60px;">
+                            1
+                        </div>
+                        <h5 class="fw-bold">Registration</h5>
+                        <p class="text-muted small mb-0">
+                            Sign up on BloodBridge and create your basic donor profile.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="col-md-3">
+                    <div class="position-relative p-4 bg-white rounded-4 shadow border border-2 border-dark h-100 hover-lift">
+                        <div class="rounded-circle bg-brand-red text-white border border-2 border-dark
+                                    d-inline-flex align-items-center
+                                    justify-content-center fw-bold fs-4 mb-3 shadow-sm"
+                             style="width:60px;height:60px;">
+                            2
+                        </div>
+                        <h5 class="fw-bold">Health Check</h5>
+                        <p class="text-muted small mb-0">
+                            A quick physical screening confirms you are ready to donate.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="col-md-3">
+                    <div class="position-relative p-4 bg-white rounded-4 shadow border border-2 border-dark h-100 hover-lift">
+                        <div class="rounded-circle bg-brand-red text-white border border-2 border-dark
+                                    d-inline-flex align-items-center
+                                    justify-content-center fw-bold fs-4 mb-3 shadow-sm"
+                             style="width:60px;height:60px;">
+                            3
+                        </div>
+                        <h5 class="fw-bold">Donation</h5>
+                        <p class="text-muted small mb-0">
+                            Relax comfortably while clinical staff handle the donation process.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="col-md-3">
+                    <div class="position-relative p-4 bg-white rounded-4 shadow border border-2 border-dark h-100 hover-lift">
+                        <div class="rounded-circle bg-brand-red text-white border border-2 border-dark
+                                    d-inline-flex align-items-center
+                                    justify-content-center fw-bold fs-4 mb-3 shadow-sm"
+                             style="width:60px;height:60px;">
+                            4
+                        </div>
+                        <h5 class="fw-bold">Refresh & Rest</h5>
+                        <p class="text-muted small mb-0">
+                            Enjoy complimentary refreshments during a brief, relaxing break.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             5. ACTION CENTER
+        ============================================================ -->
+        <section class="mb-5">
+            <div class="card bg-white border border-2 border-dark shadow rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="text-center mb-5">
+                        <span class="badge bg-brand-red text-white px-3 py-2 rounded-pill fw-bold border border-dark shadow-sm">
+                            <i class="bi bi-lightning-charge-fill me-1"></i>
+                            BLOODBRIDGE ACTION CENTER
+                        </span>
+
+                        <h2 class="fw-bold mt-3 mb-2">What Would You Like To Do?</h2>
+
+                        <p class="text-muted mb-0">
+                            Choose an option below to proceed.
+                        </p>
+                    </div>
+
+                    <div class="row g-4 justify-content-center">
+                        <!-- Donate Blood -->
+                        <div class="col-md-4">
+                            <a href="{% url 'donate_blood' %}" class="text-decoration-none">
+                                <div class="card h-100 bg-white border border-2 border-dark shadow hover-lift p-4 text-center rounded-4">
+                                    <div class="rounded-circle bg-brand-red text-white border border-2 border-dark
+                                                d-inline-flex align-items-center
+                                                justify-content-center mx-auto mb-4 shadow-sm"
+                                         style="width:70px;height:70px;">
+                                        <i class="bi bi-heart-fill fs-2"></i>
+                                    </div>
+
+                                    <h4 class="fw-bold text-brand-red mb-2">Donate Blood</h4>
+
+                                    <p class="text-muted mb-4">
+                                        Pledge a donation and schedule your life-saving contribution.
+                                    </p>
+
+                                    <div class="btn bg-brand-red text-white rounded-pill px-4 fw-bold mt-auto border border-dark shadow-sm">
+                                        <i class="bi bi-arrow-right me-2"></i>
+                                        Donate Now
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Request Blood -->
+                        <div class="col-md-4">
+                            <a href="{% url 'request_blood' %}" class="text-decoration-none">
+                                <div class="card h-100 bg-white border border-2 border-dark shadow hover-lift p-4 text-center rounded-4">
+                                    <div class="rounded-circle bg-dark text-white border border-2 border-dark
+                                                d-inline-flex align-items-center
+                                                justify-content-center mx-auto mb-4 shadow-sm"
+                                         style="width:70px;height:70px;">
+                                        <i class="bi bi-file-earmark-medical-fill fs-2"></i>
+                                    </div>
+
+                                    <h4 class="fw-bold text-dark mb-2">Request Blood</h4>
+
+                                    <p class="text-muted mb-4">
+                                        Submit an urgent request for a patient in immediate need.
+                                    </p>
+
+                                    <div class="btn btn-outline-dark rounded-pill px-4 fw-bold mt-auto border-2 shadow-sm">
+                                        <i class="bi bi-arrow-right me-2"></i>
+                                        Request Blood
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Blood Inventory -->
+                        <div class="col-md-4">
+                            <a href="{% url 'blood_inventory' %}" class="text-decoration-none">
+                                <div class="card h-100 bg-white border border-2 border-dark shadow hover-lift p-4 text-center rounded-4">
+                                    <div class="rounded-circle badge-brand-subtle border border-2 border-dark
+                                                d-inline-flex align-items-center
+                                                justify-content-center mx-auto mb-4 shadow-sm"
+                                         style="width:70px;height:70px;">
+                                        <i class="bi bi-box-seam-fill fs-2 text-brand-red"></i>
+                                    </div>
+
+                                    <h4 class="fw-bold text-brand-red mb-2">Blood Inventory</h4>
+
+                                    <p class="text-muted mb-4">
+                                        Explore live stock inventory levels across medical units.
+                                    </p>
+
+                                    <div class="btn btn-outline-danger rounded-pill px-4 fw-bold mt-auto border-2 shadow-sm">
+                                        <i class="bi bi-eye me-2"></i>
+                                        View Inventory
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             6. USER DASHBOARD SHORTCUT
+        ============================================================ -->
+        {% if user.is_authenticated %}
+        <section class="mb-5">
+            <div class="p-4 p-md-5 rounded-4 bg-brand-red text-white border border-2 border-dark shadow hover-lift">
+                <div class="row align-items-center gy-3">
+                    <div class="col-md-8">
+                        <h4 class="fw-bold mb-2">Welcome Back! Manage Your Activity</h4>
+                        <p class="mb-0 text-white-50">
+                            View pending requests, track donation milestones, and update your personal donor profile.
+                        </p>
+                    </div>
+
+                    <div class="col-md-4 text-md-end">
+                        <a href="{% url 'dashboard' %}"
+                           class="btn btn-light text-brand-red fw-bold rounded-pill px-4 py-2 border border-dark shadow-sm hover-lift">
+                            <i class="bi bi-speedometer2 me-2"></i>
+                            Go to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- ============================================================
+             7. FINAL CALL TO ACTION
+        ============================================================ -->
+        <section class="mb-4">
+            <div class="text-center p-5 rounded-4 card-cta-gradient shadow-sm">
+                <i class="bi bi-heart-fill text-brand-red display-4 mb-3 pulse-icon"></i>
+                <h2 class="fw-bold mb-3">Every Act of Kindness Creates a Ripple</h2>
+                <p class="text-muted mx-auto mb-4" style="max-width:680px;">
+                    Your single decision to donate can restore health, support grieving families, and spread hope across entire communities.
+                </p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <a href="{% url 'donate_blood' %}" class="btn bg-brand-red text-white rounded-pill px-4 py-2 fw-bold shadow-sm hover-lift">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>
+                        Donate Blood
+                    </a>
+                    <a href="{% url 'blood_inventory' %}" class="btn btn-outline-danger rounded-pill px-4 py-2 fw-bold shadow-sm hover-lift">
+                        <i class="bi bi-box-seam me-2"></i>
+                        Check Inventory
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,586 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Users - BloodBridge{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ==========================================================================
+     BloodBridge Visual Identity & Core Styles
+     ========================================================================== */
+  :root {
+    --bb-red: #dc3545;
+    --bb-dark-red: #8b0000;
+    --bb-accent-pink: #fff0f3;
+    --bb-dark: #212529;
+    --bb-border-dark: #000000;
+  }
+
+  .manage-users-wrapper {
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Hero Section Styling */
+  .bb-admin-hero {
+    background: linear-gradient(135deg, #b30000 0%, #680000 100%);
+    border: 2px solid var(--bb-border-dark);
+    box-shadow: 0 8px 24px rgba(139, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bb-hero-glow-1 {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .bb-hero-glow-2 {
+    position: absolute;
+    bottom: -60px;
+    left: 20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 51, 51, 0.3) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .bb-pulse-icon {
+    animation: floatPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes floatPulse {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(1.03); }
+  }
+
+  /* Stat Cards */
+  .stat-card-redesign {
+    background: #ffffff;
+    border: 2px solid var(--bb-border-dark) !important;
+    border-radius: 14px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .stat-card-redesign:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .stat-card-redesign:hover .stat-icon-box {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .stat-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+  }
+
+  /* Control Panel / Filter Styling */
+  .bb-filter-card {
+    background: #ffffff;
+    border: 2px solid var(--bb-border-dark);
+    border-left: 6px solid var(--bb-red);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  }
+
+  .bb-input-group .form-control,
+  .bb-input-group .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .bb-input-group .form-control:focus,
+  .bb-input-group .form-select:focus {
+    border-color: var(--bb-red);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
+  }
+
+  /* Users Table Section */
+  .bb-table-card {
+    background: #ffffff;
+    border: 2px solid var(--bb-border-dark);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .bb-table-header {
+    background-color: var(--bb-accent-pink);
+    border-bottom: 2px solid var(--bb-border-dark);
+  }
+
+  .bb-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .bb-table tbody tr:hover {
+    background-color: #fff9fa;
+  }
+
+  .bb-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--bb-red);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+  }
+
+  .bb-avatar:hover {
+    transform: scale(1.1);
+  }
+
+  .bb-avatar-placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--bb-accent-pink);
+    color: var(--bb-red);
+    border: 2px solid var(--bb-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  /* Empty State Styling */
+  .bb-empty-card {
+    background: var(--bb-accent-pink);
+    border: 2px dashed var(--bb-red);
+    border-radius: 16px;
+  }
+
+  /* Security Box */
+  .bb-security-notice {
+    background: #f8f9fa;
+    border: 2px solid var(--bb-border-dark);
+    border-radius: 12px;
+  }
+
+  /* Buttons */
+  .btn-bb-red {
+    background-color: var(--bb-red);
+    color: #ffffff;
+    border: 2px solid var(--bb-border-dark);
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-bb-red:hover {
+    background-color: var(--bb-dark-red);
+    color: #ffffff;
+  }
+
+  .btn-bb-outline {
+    background-color: #ffffff;
+    color: var(--bb-dark);
+    border: 2px solid var(--bb-border-dark);
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-bb-outline:hover {
+    background-color: #f8f9fa;
+    color: var(--bb-dark);
+  }
+
+  /* Accessibility Motion Adjustments */
+  @media (prefers-reduced-motion: reduce) {
+    .manage-users-wrapper,
+    .bb-pulse-icon,
+    .stat-card-redesign,
+    .bb-avatar {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid section-padding manage-users-wrapper py-4 px-md-4">
+
+    <!-- Messages Section -->
+    {% if messages %}
+        <div class="row mb-4">
+            <div class="col-12">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show d-flex align-items-center shadow-sm rounded-3 border border-dark" role="alert">
+                        {% if message.tags == 'success' %}
+                            <i class="bi bi-check-circle-fill me-2 fs-5 text-success"></i>
+                        {% elif message.tags == 'danger' or message.tags == 'error' %}
+                            <i class="bi bi-exclamation-triangle-fill me-2 fs-5 text-danger"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="bi bi-exclamation-circle-fill me-2 fs-5 text-warning"></i>
+                        {% else %}
+                            <i class="bi bi-info-circle-fill me-2 fs-5 text-info"></i>
+                        {% endif %}
+                        <div class="fw-semibold text-dark">{{ message }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- 1. ADMIN PAGE HERO / HEADER -->
+    <div class="bb-admin-hero p-4 p-md-5 rounded-4 text-white mb-4">
+        <div class="bb-hero-glow-1"></div>
+        <div class="bb-hero-glow-2"></div>
+        <div class="row align-items-center position-relative z-1">
+            <div class="col-lg-8 text-center text-lg-start">
+                <span class="badge bg-white text-danger fw-bold uppercase px-3 py-2 rounded-pill mb-3 text-uppercase tracking-wider shadow-sm border border-dark">
+                    <i class="bi bi-shield-lock-fill me-1"></i> USER MANAGEMENT
+                </span>
+                <h1 class="display-5 fw-extrabold mb-2 text-white">Manage Users</h1>
+                <p class="lead mb-0 text-white-50" style="max-width: 650px;">
+                    Monitor registered BloodBridge users, manage account statuses, track donor eligibility, and verify administrative user roles safely.
+                </p>
+            </div>
+            <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+                <i class="bi bi-people-fill display-1 text-white opacity-75 bb-pulse-icon d-inline-block"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. USER STATISTICS SECTION -->
+    <div class="row g-3 mb-4">
+        <!-- Total Users -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card stat-card-redesign h-100">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Total Users</p>
+                            <h2 class="display-6 fw-bold mb-0 text-dark">{{ total_users|default:0 }}</h2>
+                            <small class="text-danger fw-semibold"><i class="bi bi-graph-up me-1"></i>Registered Accounts</small>
+                        </div>
+                        <div class="stat-icon-box bg-danger-subtle text-danger border border-danger-subtle">
+                            <i class="bi bi-people-fill fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Users -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card stat-card-redesign h-100">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Active Users</p>
+                            <h2 class="display-6 fw-bold mb-0 text-success">{{ active_users|default:0 }}</h2>
+                            <small class="text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>Operational Status</small>
+                        </div>
+                        <div class="stat-icon-box bg-success-subtle text-success border border-success-subtle">
+                            <i class="bi bi-person-check-fill fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff / Admins -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card stat-card-redesign h-100">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Staff / Admins</p>
+                            <h2 class="display-6 fw-bold mb-0 text-primary">{{ total_admins|default:0 }}</h2>
+                            <small class="text-primary fw-semibold"><i class="bi bi-shield-check me-1"></i>System Privilege</small>
+                        </div>
+                        <div class="stat-icon-box bg-primary-subtle text-primary border border-primary-subtle">
+                            <i class="bi bi-shield-lock-fill fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registered Donors -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card stat-card-redesign h-100">
+                <div class="card-body p-3 p-md-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Registered Donors</p>
+                            <h2 class="display-6 fw-bold mb-0 text-danger">{{ total_donors|default:0 }}</h2>
+                            <small class="text-danger fw-semibold"><i class="bi bi-heart-fill me-1"></i>Active Blood Donors</small>
+                        </div>
+                        <div class="stat-icon-box bg-danger-subtle text-danger border border-danger-subtle">
+                            <i class="bi bi-droplet-fill fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. SEARCH AND FILTER CONTROL PANEL -->
+    <div class="card bb-filter-card mb-4">
+        <div class="card-body p-4">
+            <div class="mb-3">
+                <h5 class="fw-bold text-dark mb-1"><i class="bi bi-funnel-fill text-danger me-2"></i>Find & Filter Users</h5>
+                <p class="text-muted small mb-0">Search registered accounts and quickly filter users by their current status or role.</p>
+            </div>
+            <form method="get" class="row g-3 align-items-end bb-input-group">
+                <!-- Search Input -->
+                <div class="col-12 col-md-5 col-lg-4">
+                    <label for="searchQuery" class="form-label small fw-bold text-dark">Search User</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="searchQuery" name="q" class="form-control border-start-0" placeholder="Username, name, or email..." value="{{ request.GET.q }}">
+                    </div>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+                    <label for="statusFilter" class="form-label small fw-bold text-dark">Account Status</label>
+                    <select name="status" id="statusFilter" class="form-select bg-white">
+                        <option value="" {% if not request.GET.status %}selected{% endif %}>All Statuses</option>
+                        <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Role Filter -->
+                <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+                    <label for="roleFilter" class="form-label small fw-bold text-dark">User Role</label>
+                    <select name="role" id="roleFilter" class="form-select bg-white">
+                        <option value="" {% if not request.GET.role %}selected{% endif %}>All Roles</option>
+                        <option value="user" {% if request.GET.role == 'user' %}selected{% endif %}>Users</option>
+                        <option value="admin" {% if request.GET.role == 'admin' %}selected{% endif %}>Admins</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-12 col-md-12 col-lg-2 d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
+                    <button type="submit" class="btn btn-bb-red w-100 text-nowrap">
+                        <i class="bi bi-funnel-fill me-1"></i> Filter
+                    </button>
+                    <a href="{% url 'manage_users' %}" class="btn btn-bb-outline w-100 text-nowrap" title="Reset Filters">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. USER LIST / USER TABLE SECTION -->
+    <div class="card bb-table-card mb-4">
+        {% if users %}
+            <div class="table-responsive">
+                <table class="table bb-table align-middle mb-0">
+                    <thead class="bb-table-header">
+                        <tr class="text-uppercase fs-7 text-dark fw-bold">
+                            <th scope="col" class="ps-4 py-3">User</th>
+                            <th scope="col" class="py-3">Email</th>
+                            <th scope="col" class="py-3">Role</th>
+                            <th scope="col" class="py-3">Donor Status</th>
+                            <th scope="col" class="py-3">Joined</th>
+                            <th scope="col" class="py-3">Last Login</th>
+                            <th scope="col" class="py-3">Account Status</th>
+                            <th scope="col" class="text-end pe-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        {% for item in users %}
+                            {% with u=item.user|default:item %}
+                            <tr>
+                                <!-- User Column -->
+                                <td class="ps-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            {% if u.donor and u.donor.profile_picture %}
+                                                <img src="{{ u.donor.profile_picture.url }}" alt="{{ u.username }}" class="bb-avatar">
+                                            {% else %}
+                                                <div class="bb-avatar-placeholder">
+                                                    <i class="bi bi-person-fill fs-5"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark fs-6">{{ u.get_full_name|default:u.username }}</div>
+                                            <div class="small text-muted">@{{ u.username }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Email Column -->
+                                <td class="py-3">
+                                    <span class="text-dark fw-medium">{{ u.email|default:"—" }}</span>
+                                </td>
+
+                                <!-- Role Column -->
+                                <td class="py-3">
+                                    {% if u.is_staff %}
+                                        <span class="badge bg-danger text-white border border-dark rounded-pill px-3 py-1.5 fw-semibold shadow-sm">
+                                            <i class="bi bi-shield-lock-fill me-1"></i> Admin
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-light text-dark border border-dark rounded-pill px-3 py-1.5 fw-semibold">
+                                            <i class="bi bi-person-fill me-1"></i> User
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Donor Status Column -->
+                                <td class="py-3">
+                                    {% if u.donor %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1.5 fw-semibold">
+                                            <i class="bi bi-droplet-fill me-1"></i> Registered Donor
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-light text-muted border rounded-pill px-3 py-1.5 fw-normal">
+                                            <i class="bi bi-dash-circle me-1"></i> No Donor Profile
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Joined Column -->
+                                <td class="py-3">
+                                    <span class="small text-muted fw-medium" title="{{ u.date_joined|date:'Y-m-d H:i' }}">
+                                        {{ u.date_joined|date:"M d, Y" }}
+                                    </span>
+                                </td>
+
+                                <!-- Last Login Column -->
+                                <td class="py-3">
+                                    {% if u.last_login %}
+                                        <span class="small text-muted fw-medium" title="{{ u.last_login|date:'Y-m-d H:i' }}">
+                                            {{ u.last_login|date:"M d, Y" }}
+                                        </span>
+                                    {% else %}
+                                        <span class="small text-muted fst-italic">Never</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Account Status Column -->
+                                <td class="py-3">
+                                    {% if u.is_active %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 fw-semibold">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Active
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3 py-1.5 fw-semibold">
+                                            <i class="bi bi-x-circle-fill me-1"></i> Inactive
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Actions Column -->
+                                <td class="pe-4 py-3 text-end">
+                                    <div class="d-inline-flex gap-2 justify-content-end align-items-center">
+                                        <!-- View User Button -->
+                                        <a href="{% url 'view_user' u.id %}" class="btn btn-sm btn-outline-danger border-dark fw-bold text-nowrap">
+                                            <i class="bi bi-eye-fill me-1"></i> View
+                                        </a>
+
+                                        <!-- Toggle Status Form -->
+                                        <form method="POST" action="{% url 'toggle_user_status' u.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            {% if u.is_active %}
+                                                <button type="submit" class="btn btn-sm btn-outline-warning border-dark text-dark fw-bold text-nowrap" onclick="return confirm('Are you sure you want to deactivate this user?');">
+                                                    <i class="bi bi-person-x-fill me-1 text-warning"></i> Deactivate
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-sm btn-outline-success border-dark text-dark fw-bold text-nowrap" onclick="return confirm('Are you sure you want to activate this user?');">
+                                                    <i class="bi bi-person-check-fill me-1 text-success"></i> Activate
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <!-- 8. EMPTY STATE -->
+            <div class="card-body p-5 text-center bb-empty-card m-3">
+                <div class="py-4">
+                    <div class="bg-white text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm border border-dark" style="width: 80px; height: 80px;">
+                        <i class="bi bi-people-fill display-5"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark">No Users Found</h4>
+                    <p class="text-muted max-w-md mx-auto mb-4" style="max-width: 480px;">
+                        We couldn't find any BloodBridge users matching your current search or filter criteria. Try resetting the filters or modifying your query.
+                    </p>
+                    <a href="{% url 'manage_users' %}" class="btn btn-bb-red px-4 rounded-pill">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 9. ADMIN SECURITY SECTION -->
+    <div class="bb-security-notice p-3 p-md-4 mb-2 d-flex align-items-center gap-3">
+        <div class="bg-white text-danger rounded-circle p-3 border border-dark shadow-sm flex-shrink-0">
+            <i class="bi bi-shield-lock-fill fs-3"></i>
+        </div>
+        <div>
+            <h6 class="fw-bold text-dark mb-1">Protected Administrative Area</h6>
+            <p class="small text-muted mb-0">
+                User management operations are strictly logged and restricted to authorized BloodBridge administrators. Account status changes take effect immediately across all active user sessions.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Delete Confirmation JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize tooltips if standard bootstrap tooltips are enabled
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Delete confirmation hook
+        const deleteButtons = document.querySelectorAll(".delete-user-btn");
+        deleteButtons.forEach(function (button) {
+            button.addEventListener("click", function (event) {
+                const username = this.getAttribute("data-username") || "this user";
+                const confirmed = confirm(`Are you sure you want to delete "${username}"?\nThis action cannot be undone.`);
+                if (!confirmed) {
+                    event.preventDefault();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

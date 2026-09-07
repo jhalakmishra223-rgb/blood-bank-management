@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services - BloodBridge{% endblock %}
+
+{% block content %}
+<div class="services-page">
+
+  <!-- ============================================================ -->
+  <!-- 1. HERO SECTION                                              -->
+  <!-- ============================================================ -->
+  <section class="hero-section-red position-relative overflow-hidden">
+    <div class="container position-relative z-1">
+      <div class="row align-items-center g-4">
+        
+        <!-- Left Text Content -->
+        <div class="col-lg-6 text-center text-lg-start">
+          <span class="badge hero-pill-badge px-3 py-2 rounded-pill mb-3 d-inline-flex align-items-center">
+            <i class="bi bi-droplet-fill me-1.5"></i> OUR SERVICES
+          </span>
+          <h1 class="display-5 hero-title-bold mb-3">
+            Lifesaving Services,<br>Connected in One Place
+          </h1>
+          <p class="text-white-50 mb-4 max-w-600 fs-6">
+            BloodBridge connects donors, blood inventory, and patients through a simple, transparent, and reliable blood management platform.
+          </p>
+          <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+            <a href="{% url 'donate_blood' %}" class="btn hero-btn-white px-4 py-2.5 rounded-pill shadow-sm">
+              <i class="bi bi-heart-fill me-1.5"></i> Donate Blood
+            </a>
+            <a href="{% url 'request_blood' %}" class="btn hero-btn-outline px-4 py-2.5 rounded-pill">
+              <i class="bi bi-file-earmark-medical me-1.5"></i> Request Blood
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Side Vector Graphic -->
+        <div class="col-lg-6 text-center">
+          <div class="hero-anim-box mx-auto float-anim" style="max-width: 440px;">
+            <svg class="img-fluid rounded-3" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="500" height="300" rx="16" fill="#ffffff" fill-opacity="0.95" />
+              <path d="M 50 150 L 130 150 L 160 100 L 190 210 L 220 120 L 250 170 L 280 150 L 450 150" stroke="#dc3545" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              <g>
+                <path d="M 250 70 C 250 70 210 120 210 150 C 210 172 227.9 190 250 190 C 272.1 190 290 172 290 150 C 290 120 250 70 250 70 Z" fill="#dc3545" />
+                <path d="M 240 135 C 240 135 228 150 228 158 C 228 164.6 233.4 170 240 170" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 2. CORE SERVICES OVERVIEW                                    -->
+  <!-- ============================================================ -->
+  <section class="py-5 bg-white">
+    <div class="container py-lg-3">
+      <div class="text-center max-w-700 mx-auto mb-5">
+        <span class="badge section-badge px-3 py-1.5 rounded-pill mb-2">SERVICES OVERVIEW</span>
+        <h2 class="h2 fw-bold text-dark mt-2 mb-2">Everything You Need to Manage Blood</h2>
+        <p class="text-muted small">BloodBridge brings essential blood-management services together in one central platform.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- CARD 1: Blood Donation -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0 d-flex flex-column align-items-center">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-droplet-fill"></i>
+              </div>
+              <h3 class="h5 fw-bold text-dark mb-2">Blood Donation</h3>
+              <p class="text-muted small mb-4 flex-grow-1">
+                Register as a donor and contribute blood to help maintain a reliable and lifesaving supply for patients in need.
+              </p>
+              <a href="{% url 'donate_blood' %}" class="btn btn-outline-danger fw-bold px-4 rounded-pill border-2">
+                Donate Blood <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: Request Blood -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0 d-flex flex-column align-items-center">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-file-earmark-medical-fill"></i>
+              </div>
+              <h3 class="h5 fw-bold text-dark mb-2">Request Blood</h3>
+              <p class="text-muted small mb-4 flex-grow-1">
+                Submit a blood request quickly when you or someone you care about urgently needs blood units or blood components.
+              </p>
+              <a href="{% url 'request_blood' %}" class="btn btn-outline-danger fw-bold px-4 rounded-pill border-2">
+                Request Blood <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: Blood Inventory -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0 d-flex flex-column align-items-center">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-box-seam-fill"></i>
+              </div>
+              <h3 class="h5 fw-bold text-dark mb-2">Blood Inventory</h3>
+              <p class="text-muted small mb-4 flex-grow-1">
+                View real-time blood stock levels and verify the current availability of different blood groups across regional reserves.
+              </p>
+              <a href="{% url 'blood_inventory' %}" class="btn btn-outline-danger fw-bold px-4 rounded-pill border-2">
+                View Inventory <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Donor Profiles -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0 d-flex flex-column align-items-center">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-person-heart"></i>
+              </div>
+              <h3 class="h5 fw-bold text-dark mb-2">Donor Profiles</h3>
+              <p class="text-muted small mb-4 flex-grow-1">
+                Maintain your verified donor profile, keep health records updated, track past donations, and manage notification settings.
+              </p>
+              <span class="badge bg-light text-dark border border-dark px-3 py-2 rounded-pill fw-bold small">
+                <i class="bi bi-shield-check text-danger me-1"></i> Managed Account
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5: Request Tracking -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0 d-flex flex-column align-items-center">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-clipboard2-check-fill"></i>
+              </div>
+              <h3 class="h5 fw-bold text-dark mb-2">Request Tracking</h3>
+              <p class="text-muted small mb-4 flex-grow-1">
+                Keep track of your active blood requests, monitor updates in real time, and verify hospital dispatch status smoothly.
+              </p>
+              <span class="badge bg-light text-dark border border-dark px-3 py-2 rounded-pill fw-bold small">
+                <i class="bi bi-activity text-danger me-1"></i> Real-time Monitoring
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 6: BloodBridge Dashboard -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0 d-flex flex-column align-items-center">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-speedometer2"></i>
+              </div>
+              <h3 class="h5 fw-bold text-dark mb-2">BloodBridge Dashboard</h3>
+              <p class="card-text text-muted small mb-4 flex-grow-1">
+                Access your centralized BloodBridge account hub to view overall activity, profile metrics, requests, and emergency actions.
+              </p>
+              <a href="{% url 'dashboard' %}" class="btn btn-outline-danger fw-bold px-4 rounded-pill border-2">
+                Open Dashboard <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 3. HOW IT WORKS / PROCESS FLOW                              -->
+  <!-- ============================================================ -->
+  <section class="py-5 bg-white">
+    <div class="container py-lg-3">
+      <div class="text-center max-w-700 mx-auto mb-5">
+        <span class="badge section-badge px-3 py-1.5 rounded-pill mb-2">HOW IT WORKS</span>
+        <h2 class="h2 fw-bold text-dark mt-2 mb-2">From Donation to Lifesaving Support</h2>
+        <p class="text-muted small">A streamlined connection process designed to eliminate delays when time matters most.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Step 1 -->
+        <div class="col-6 col-md-3">
+          <div class="card ui-card h-100 p-3 text-center">
+            <div class="card-body p-0">
+              <div class="step-circle mb-3">1</div>
+              <h4 class="h6 fw-bold text-dark mb-2">Donor</h4>
+              <p class="text-muted small mb-0">Generous donors register and donate blood at verified centers or mobile drives.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="col-6 col-md-3">
+          <div class="card ui-card h-100 p-3 text-center">
+            <div class="card-body p-0">
+              <div class="step-circle mb-3">2</div>
+              <h4 class="h6 fw-bold text-dark mb-2">BloodBridge</h4>
+              <p class="text-muted small mb-0">Our platform instantly catalogs, tests, and matches donation records securely.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="col-6 col-md-3">
+          <div class="card ui-card h-100 p-3 text-center">
+            <div class="card-body p-0">
+              <div class="step-circle mb-3">3</div>
+              <h4 class="h6 fw-bold text-dark mb-2">Blood Inventory</h4>
+              <p class="text-muted small mb-0">Real-time stock tracking ensures blood units are properly safely preserved.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="col-6 col-md-3">
+          <div class="card ui-card h-100 p-3 text-center">
+            <div class="card-body p-0">
+              <div class="step-circle mb-3">4</div>
+              <h4 class="h6 fw-bold text-dark mb-2">Patient</h4>
+              <p class="text-muted small mb-0">Hospitals and individuals receive prompt dispatches to save lives without delay.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 4. URGENT ASSISTANCE BANNER                                  -->
+  <!-- ============================================================ -->
+  <section class="py-4 bg-white">
+    <div class="container">
+      <div class="emergency-banner-box p-4 p-md-5 text-white">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <span class="badge bg-white text-danger fw-bold mb-2 px-3 py-1 rounded-pill">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i> URGENT ASSISTANCE
+            </span>
+            <h2 class="h2 fw-bold text-white mb-2">Need Blood? We're Here to Help.</h2>
+            <p class="text-white-50 mb-0 max-w-650 small">
+              When blood is urgently needed, every single moment matters. Use BloodBridge to submit an immediate request and check available blood stock in real time.
+            </p>
+          </div>
+          <div class="col-lg-4 text-lg-end">
+            <div class="d-flex flex-column gap-2.5">
+              <a href="{% url 'request_blood' %}" class="btn btn-light text-danger fw-bold px-4 py-2 rounded-3">
+                <i class="bi bi-file-earmark-medical me-1.5"></i> Request Blood Now
+              </a>
+              <a href="{% url 'blood_inventory' %}" class="btn btn-outline-light fw-bold px-4 py-2 rounded-3">
+                <i class="bi bi-box-seam me-1.5"></i> View Available Stock
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 5. WHY CHOOSE BLOODBRIDGE SECTION                            -->
+  <!-- ============================================================ -->
+  <section class="py-5 bg-white">
+    <div class="container py-lg-3">
+      <div class="text-center max-w-700 mx-auto mb-5">
+        <span class="badge section-badge px-3 py-1.5 rounded-pill mb-2">KEY ADVANTAGES</span>
+        <h2 class="h2 fw-bold text-dark mt-2 mb-2">Why Choose BloodBridge?</h2>
+        <p class="text-muted small">Built with precision and care to make the blood management process efficient, reliable, and accessible.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-lightning-charge-fill"></i>
+              </div>
+              <h3 class="h6 fw-bold text-dark mb-2">Easy Access</h3>
+              <p class="text-muted small mb-0">Intuitive interface designed for quick navigation and immediate blood request submissions.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-box-seam-fill"></i>
+              </div>
+              <h3 class="h6 fw-bold text-dark mb-2">Centralized Inventory</h3>
+              <p class="text-muted small mb-0">Consolidated stock records ensure accuracy across hospitals and donor facilities.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-clipboard-check-fill"></i>
+              </div>
+              <h3 class="h6 fw-bold text-dark mb-2">Request Tracking</h3>
+              <p class="text-muted small mb-0">Transparent tracking keeps patients and healthcare staff updated on request status.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card ui-card h-100 p-4 text-center">
+            <div class="card-body p-0">
+              <div class="card-icon-circle mb-3">
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <h3 class="h6 fw-bold text-dark mb-2">Connected Community</h3>
+              <p class="text-muted small mb-0">Fostering a strong network of compassionate donors ready to save lives when called upon.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 6. FINAL CALL TO ACTION                                      -->
+  <!-- ============================================================ -->
+<section class="py-5 bg-white">
+  <div class="container-fluid px-3 px-md-5 py-lg-3">
+    <!-- Wide Rectangular Banner with Crimson Gradient, 4px Black Border, and Broad Shadow -->
+    <div class="card border-4 border-dark p-4 p-md-5 mx-auto rounded-4 text-white overflow-hidden" 
+         style="max-width: 1200px; background: linear-gradient(135deg, #8B0000 0%, #B22222 50%, #dc3545 100%); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);">
+      
+      <div class="card-body p-0">
+        <div class="row align-items-center g-4">
+          
+          <!-- Left Column: Icon & Info -->
+          <div class="col-xl-6 text-center text-xl-start">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white text-danger rounded-circle mb-3 shadow" style="width: 65px; height: 65px;">
+              <i class="bi bi-heart-pulse-fill fs-2"></i>
+            </div>
+            <h2 class="display-6 fw-bold text-white mb-2">Be the Connection Someone Needs</h2>
+            <p class="lead text-white-50 mb-0">
+              Whether you are donating blood, requesting it, or joining as a new donor, BloodBridge helps connect people when it matters most.
+            </p>
+          </div>
+
+          <!-- Right Column: Single-Row Horizontally Aligned Buttons -->
+          <div class="col-xl-6">
+            <div class="row g-2 justify-content-center justify-content-xl-end align-items-center">
+              <div class="col-12 col-sm-4">
+                <a href="{% url 'signup' %}" class="btn btn-light btn-lg text-danger fw-bold w-100 py-3 rounded-3 shadow d-flex align-items-center justify-content-center text-nowrap">
+                  <i class="bi bi-person-plus-fill me-2"></i> Register
+                </a>
+              </div>
+              <div class="col-12 col-sm-4">
+                <a href="{% url 'donate_blood' %}" class="btn btn-outline-light btn-lg fw-semibold w-100 py-3 rounded-3 d-flex align-items-center justify-content-center text-nowrap">
+                  <i class="bi bi-droplet-fill me-2"></i> Donate Blood
+                </a>
+              </div>
+              <div class="col-12 col-sm-4">
+                <a href="{% url 'request_blood' %}" class="btn btn-outline-light btn-lg fw-semibold w-100 py-3 rounded-3 d-flex align-items-center justify-content-center text-nowrap">
+                  <i class="bi bi-file-earmark-medical me-2"></i> Request Blood
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div>
+{% endblock %}

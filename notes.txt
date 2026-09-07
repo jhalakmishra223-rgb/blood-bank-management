@@ -1,0 +1,32 @@
+Q1. Why is enctype="multipart/form-data" required?
+
+Answer:
+
+Without it, the browser only sends text fields. Uploaded files are omitted entirely, so Django never receives them.
+
+Q2. Where are uploaded images available in Django?
+
+Answer:
+
+In request.FILES, while regular form fields are available in request.POST.
+Why do we use request.FILES.get("profile_picture") instead of request.POST.get("profile_picture")?
+
+Because uploaded files are transmitted separately from normal form data. Django places file uploads in request.FILES, while text inputs are available in request.POST.
+Q: Why do we customize admin.py instead of only using admin.site.register(Model)?
+
+Answer:
+admin.site.register(Model) provides basic CRUD functionality. A custom ModelAdmin allows us to configure how records are displayed, searched, filtered, ordered, and edited, making the admin panel much more efficient for real-world applications.
+
+I recommend we use the customized ModelAdmin approach throughout BloodBridge. It will make your project look much more professional and is exactly what employers expect to see in a portfolio project.
+Q2. Why did we set unique=True?
+Because there should be exactly one inventory record per blood group. The available units for that group are updated in that single record rather than creating duplicate rows.
+
+ get mehod not used to store data from forms bcz it is not safe it shows the data on the address bar.
+ inner html me jo bhi daalo vo tags bi consider krega inner text me jo daalo sab text hi hoga
+ 1. Why check the current status before fulfilling a request?
+
+To enforce business rules. Only approved requests should be fulfilled, ensuring the workflow remains consistent.
+
+2. Why validate the rule in the view instead of relying only on the UI?
+
+The UI can hide buttons, but users can still attempt to access URLs directly. Server-side validation is essential for security and data integrity.

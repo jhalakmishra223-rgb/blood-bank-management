@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Donor Profile | {{ donor.user.get_full_name|default:donor.user.username }} | BloodBridge{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* BloodBridge Deep Red Theme Palette */
+    :root {
+        --bb-deep-red-start: #a71d2a;
+        --bb-deep-red-end: #660000;
+        --bb-deep-red-dark: #4a0000;
+        --bb-accent-glow: rgba(167, 29, 42, 0.15);
+    }
+
+    /* Keyframe Animations */
+    @keyframes pulseGlow {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.15); opacity: 0.85; }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .pulse-heart {
+        animation: pulseGlow 2s infinite;
+    }
+
+    /* Custom Deep Red Buttons & Badges */
+    .btn-deep-red {
+        background: linear-gradient(135deg, var(--bb-deep-red-start), var(--bb-deep-red-end));
+        color: #ffffff;
+        border: none;
+        transition: all 0.25s ease;
+    }
+
+    .btn-deep-red:hover, .btn-deep-red:focus {
+        background: linear-gradient(135deg, #800c19, var(--bb-deep-red-dark));
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--bb-accent-glow);
+    }
+
+    .badge-deep-red {
+        background: linear-gradient(135deg, var(--bb-deep-red-start), var(--bb-deep-red-end));
+        color: #ffffff;
+    }
+
+    .badge-deep-red-subtle {
+        background-color: rgba(167, 29, 42, 0.08);
+        color: var(--bb-deep-red-start);
+        border: 1px solid rgba(167, 29, 42, 0.2);
+    }
+
+    .text-deep-red {
+        color: var(--bb-deep-red-start) !important;
+    }
+
+    .border-deep-red-subtle {
+        border-color: rgba(167, 29, 42, 0.3) !important;
+    }
+
+    /* Static Broad Black Borders on Cards */
+    .bb-card {
+        border: 2px solid #000000 !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .bb-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1.25rem var(--bb-accent-glow) !important;
+    }
+
+    .donor-header-card {
+        background: linear-gradient(135deg, #ffffff 0%, #fdf8f8 100%);
+        border: 2px solid #000000 !important;
+        border-left: 6px solid var(--bb-deep-red-start) !important;
+    }
+
+    .stat-box {
+        background: #ffffff;
+        border: 2px solid #000000 !important;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        transition: all 0.2s ease;
+    }
+
+    .stat-box:hover {
+        background: #fffafa;
+    }
+
+    .info-item-row {
+        padding: 0.85rem 0;
+        border-bottom: 1px dashed #e9ecef;
+    }
+
+    .info-item-row:last-child {
+        border-bottom: none;
+    }
+
+    /* Entrance Animations */
+    .animate-fade-in {
+        animation: fadeInUp 0.35s ease-out forwards;
+    }
+
+    .stagger-1 { animation-delay: 0.05s; }
+    .stagger-2 { animation-delay: 0.1s; }
+    .stagger-3 { animation-delay: 0.15s; }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .pulse-heart, .bb-card, .btn-deep-red, .animate-fade-in {
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 px-md-4 pt-3 pb-5">
+
+    <!-- Header Banner: Donor Profile Overview -->
+    <div class="card donor-header-card shadow-sm rounded-4 p-4 mb-4 animate-fade-in">
+        <div class="row align-items-center g-3">
+            <!-- Profile Avatar -->
+            <div class="col-auto">
+                {% if donor.profile_picture %}
+                    <img src="{{ donor.profile_picture.url }}" alt="{{ donor.user.username }}" class="rounded-circle object-fit-cover border border-3 border-dark shadow-sm" width="90" height="90">
+                {% else %}
+                    <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border border-3 border-dark shadow-sm" style="width: 90px; height: 90px;">
+                        <i class="bi bi-person-fill display-5 text-muted"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Profile Overview -->
+            <div class="col">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <h2 class="fw-bold text-dark mb-0">
+                        {% if donor.user.get_full_name %}
+                            {{ donor.user.get_full_name }}
+                        {% else %}
+                            {{ donor.user.username }}
+                        {% endif %}
+                    </h2>
+                    
+                    {% if donor.user.is_active %}
+                        <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2.5 py-1 small ms-md-2">
+                            <i class="bi bi-check-circle-fill me-1"></i>Active Donor
+                        </span>
+                    {% else %}
+                        <span class="badge badge-deep-red-subtle rounded-pill px-2.5 py-1 small ms-md-2">
+                            <i class="bi bi-x-circle-fill me-1"></i>Inactive
+                        </span>
+                    {% endif %}
+                </div>
+
+                <p class="text-muted mb-2">@{{ donor.user.username }} • Joined {{ donor.user.date_joined|date:"M d, Y" }}</p>
+
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    {% if donor.blood_group %}
+                        <span class="badge badge-deep-red rounded-pill px-3 py-1.5 fw-bold shadow-sm d-inline-flex align-items-center">
+                            <i class="bi bi-droplet-fill me-1 pulse-heart"></i> Blood Group: {{ donor.blood_group }}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary text-white rounded-pill px-3 py-1.5 fw-bold">
+                            Blood Group: Not Specified
+                        </span>
+                    {% endif %}
+
+                    {% if donor.phone %}
+                        <a href="tel:{{ donor.phone }}" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                            <i class="bi bi-telephone-fill me-1 text-success"></i> {{ donor.phone }}
+                        </a>
+                    {% endif %}
+                    
+                    {% if donor.user.email %}
+                        <a href="mailto:{{ donor.user.email }}" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                            <i class="bi bi-envelope-fill me-1 text-deep-red"></i> {{ donor.user.email }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="row g-3 mb-4 animate-fade-in stagger-1">
+        <div class="col-6 col-md-3">
+            <div class="stat-box shadow-sm d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase d-block mb-1">Total Donations</span>
+                    <h3 class="fw-bold text-dark mb-0">{{ donor.total_donations|default:0 }}</h3>
+                </div>
+                <div class="badge-deep-red-subtle rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                    <i class="bi bi-droplet-fill fs-5 text-deep-red"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="stat-box shadow-sm d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase d-block mb-1">Blood Requests</span>
+                    <h3 class="fw-bold text-dark mb-0">{{ donor.blood_requests_count|default:0 }}</h3>
+                </div>
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                    <i class="bi bi-journal-text fs-5"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="stat-box shadow-sm d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase d-block mb-1">Completion</span>
+                    <h3 class="fw-bold text-dark mb-0">{% if donor.profile_completion is not None %}{{ donor.profile_completion }}%{% else %}N/A{% endif %}</h3>
+                </div>
+                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                    <i class="bi bi-person-check-fill fs-5"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="stat-box shadow-sm d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-muted small fw-semibold text-uppercase d-block mb-1">Last Login</span>
+                    <span class="fw-bold text-dark d-block fs-6">
+                        {% if donor.user.last_login %}
+                            {{ donor.user.last_login|date:"M d, Y" }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                    <i class="bi bi-clock-history fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="row g-4 mb-4 animate-fade-in stagger-2">
+        
+        <!-- Section 1: System & Account Details -->
+        <div class="col-12 col-lg-6">
+            <div class="card bb-card h-100 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-bottom border-dark py-3 px-4 fw-bold text-uppercase fs-7 text-dark d-flex align-items-center">
+                    <i class="bi bi-shield-lock-fill text-deep-red me-2 fs-5"></i> System & Account Information
+                </div>
+                <div class="card-body p-4">
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-person me-2"></i>Full Name</span>
+                        <span class="fw-semibold text-dark">
+                            {% if donor.user.get_full_name %}{{ donor.user.get_full_name }}{% else %}<em class="text-muted">Not Provided</em>{% endif %}
+                        </span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-at me-2"></i>Username</span>
+                        <span class="fw-semibold text-dark">@{{ donor.user.username }}</span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-envelope me-2"></i>Email Address</span>
+                        <span class="fw-semibold">
+                            {% if donor.user.email %}
+                                <a href="mailto:{{ donor.user.email }}" class="text-deep-red text-decoration-none">{{ donor.user.email }}</a>
+                            {% else %}
+                                <em class="text-muted">Not Provided</em>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-toggle-on me-2"></i>Account Status</span>
+                        {% if donor.user.is_active %}
+                            <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2.5 py-1">Active</span>
+                        {% else %}
+                            <span class="badge badge-deep-red-subtle rounded-pill px-2.5 py-1">Inactive</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-calendar-check me-2"></i>Date Joined</span>
+                        <span class="text-dark">{{ donor.user.date_joined|date:"F d, Y - H:i" }}</span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-clock me-2"></i>Last Login</span>
+                        <span class="text-dark">
+                            {% if donor.user.last_login %}
+                                {{ donor.user.last_login|date:"F d, Y - H:i" }}
+                            {% else %}
+                                <em class="text-muted">Never logged in</em>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    {% if donor.profile_completion is not None %}
+                        <div class="mt-4 pt-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small fw-bold text-muted text-uppercase">Profile Completion Bar</span>
+                                <span class="small fw-bold text-dark">{{ donor.profile_completion }}%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;" role="progressbar" aria-valuenow="{{ donor.profile_completion }}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar rounded-pill {% if donor.profile_completion >= 80 %}bg-success{% elif donor.profile_completion >= 50 %}bg-info{% elif donor.profile_completion >= 25 %}bg-warning{% else %}btn-deep-red{% endif %}" style="width: {{ donor.profile_completion }}%;"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Personal & Contact Information -->
+        <div class="col-12 col-lg-6">
+            <div class="card bb-card h-100 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-bottom border-dark py-3 px-4 fw-bold text-uppercase fs-7 text-dark d-flex align-items-center">
+                    <i class="bi bi-person-lines-fill text-deep-red me-2 fs-5"></i> Personal & Contact Details
+                </div>
+                <div class="card-body p-4">
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-droplet me-2"></i>Blood Group</span>
+                        {% if donor.blood_group %}
+                            <span class="badge badge-deep-red-subtle rounded-pill px-3 py-1 fw-bold">
+                                {{ donor.blood_group }}
+                            </span>
+                        {% else %}
+                            <em class="text-muted">Not Provided</em>
+                        {% endif %}
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-hourglass-split me-2"></i>Age</span>
+                        <span class="fw-semibold text-dark">{{ donor.age|default:"Not Provided" }}</span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-gender-ambiguous me-2"></i>Gender</span>
+                        <span class="fw-semibold text-dark">{{ donor.gender|default:"Not Provided" }}</span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-telephone me-2"></i>Phone Number</span>
+                        <span class="fw-semibold text-dark">
+                            {% if donor.phone %}
+                                <a href="tel:{{ donor.phone }}" class="text-dark text-decoration-none">{{ donor.phone }}</a>
+                            {% else %}
+                                <em class="text-muted">Not Provided</em>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-building me-2"></i>City</span>
+                        <span class="fw-semibold text-dark">{{ donor.city|default:"Not Provided" }}</span>
+                    </div>
+
+                    <div class="info-item-row d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium"><i class="bi bi-map me-2"></i>State</span>
+                        <span class="fw-semibold text-dark">{{ donor.state|default:"Not Provided" }}</span>
+                    </div>
+
+                    <!-- Address Display -->
+                    <div class="mt-4 p-3 bg-light rounded-3 border border-dark">
+                        <span class="text-muted small fw-bold text-uppercase d-block mb-1">
+                            <i class="bi bi-geo-alt-fill text-deep-red me-1"></i> Full Residential Address
+                        </span>
+                        {% if donor.address %}
+                            <p class="text-dark mb-0 small leading-relaxed">{{ donor.address }}</p>
+                            {% if donor.city or donor.state %}
+                                <small class="text-muted d-block mt-1">
+                                    {% if donor.city %}{{ donor.city }}{% endif %}{% if donor.city and donor.state %}, {% endif %}{% if donor.state %}{{ donor.state }}{% endif %}
+                                </small>
+                            {% endif %}
+                        {% else %}
+                            <p class="text-muted mb-0 small italic">No detailed address on file.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Action Bar (Single Navigation Row) -->
+    <div class="d-flex align-items-center justify-content-between pt-3 border-top animate-fade-in stagger-3">
+        <a href="{% url 'manage_donors' %}" class="btn btn-outline-dark rounded-pill px-4 shadow-sm d-inline-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i> Back to Manage Donors
+        </a>
+
+        {% if donor.phone %}
+            <button type="button" class="btn btn-deep-red rounded-pill px-4 shadow-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#contactDonorModal">
+                <i class="bi bi-telephone-outbound-fill me-2"></i> Contact Donor
+            </button>
+        {% elif donor.user.email %}
+            <a href="mailto:{{ donor.user.email }}" class="btn btn-deep-red rounded-pill px-4 shadow-sm d-inline-flex align-items-center">
+                <i class="bi bi-envelope-fill me-2"></i> Email Donor
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- Interactive Contact Donor Modal -->
+{% if donor.phone %}
+<div class="modal fade" id="contactDonorModal" tabindex="-1" aria-labelledby="contactDonorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-2 border-dark">
+            <div class="modal-header border-bottom border-dark bg-light">
+                <h5 class="modal-title fw-bold text-dark" id="contactDonorModalLabel">
+                    <i class="bi bi-telephone-fill text-deep-red me-2"></i>Contact {{ donor.user.get_full_name|default:donor.user.username }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="text-muted mb-3">Choose your preferred method to reach this donor:</p>
+                <div class="p-3 bg-light rounded-3 border border-dark mb-4">
+                    <span class="text-muted small fw-bold text-uppercase d-block mb-1">Registered Phone Number</span>
+                    <h4 class="fw-bold text-dark mb-0" id="donorPhoneNum">{{ donor.phone }}</h4>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a href="tel:{{ donor.phone }}" class="btn btn-deep-red py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
+                        <i class="bi bi-telephone-outbound-fill me-2"></i> Call Directly
+                    </a>
+                    <a href="sms:{{ donor.phone }}" class="btn btn-outline-dark py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center">
+                        <i class="bi bi-chat-text-fill me-2"></i> Send SMS
+                    </a>
+                    <button type="button" onclick="copyToClipboard('{{ donor.phone }}')" class="btn btn-light border border-dark py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center" id="copyPhoneBtn">
+                        <i class="bi bi-clipboard-check me-2"></i> Copy Phone Number
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            const btn = document.getElementById('copyPhoneBtn');
+            btn.innerHTML = '<i class="bi bi-check2 me-2"></i> Copied to Clipboard!';
+            btn.classList.add('btn-success', 'text-white');
+            btn.classList.remove('btn-light');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="bi bi-clipboard-check me-2"></i> Copy Phone Number';
+                btn.classList.remove('btn-success', 'text-white');
+                btn.classList.add('btn-light');
+            }, 2000);
+        });
+    }
+</script>
+{% endif %}
+
+{% endblock %}

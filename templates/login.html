@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login | BloodBridge
+{% endblock %}
+
+{% block content %}
+<!-- LOGIN SECTION -->
+<section class="py-5 bg-light">
+  <div class="container my-auto">
+    <div class="row g-0 justify-content-center align-items-stretch shadow-lg rounded-4 overflow-hidden border">
+      
+      <!-- LEFT SIDE: RED GRADIENT HERO & BRANDING -->
+      <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between p-5 text-white position-relative" style="background: linear-gradient(135deg, #dc3545 0%, #8b0000 100%); min-height: 550px;">
+        
+        <!-- Brand Header -->
+        <div class="d-flex align-items-center gap-2">
+          <div class="bg-white text-danger rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px;">
+            <i class="bi bi-droplet-fill fs-4"></i>
+          </div>
+          <span class="fs-4 fw-bold tracking-wide">BloodBridge</span>
+        </div>
+
+        <!-- Illustration Placeholder & Motivational Section -->
+        <div class="text-center my-auto py-4">
+          <!-- Glassmorphic Illustration Container -->
+          <div class="p-4 rounded-4 mb-4 border border-white border-opacity-25 shadow-sm mx-auto d-flex flex-column align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); max-width: 360px;">
+            <div class="rounded-circle bg-white text-danger p-4 mb-3 shadow">
+              <i class="bi bi-shield-lock-fill display-2"></i>
+            </div>
+            <span class="badge bg-white text-danger px-3 py-2 rounded-pill fw-bold">Secure Access</span>
+          </div>
+
+          <h2 class="display-6 fw-bold mb-3">Welcome Back!</h2>
+          <p class="lead text-white-50 mx-auto" style="max-width: 420px;">
+            Connecting donors, hospitals, and patients in real-time. Log in to manage requests and save lives today.
+          </p>
+        </div>
+
+        <!-- Footer / Trust Micro-copy -->
+        <div class="d-flex justify-content-between align-items-center text-white-50 small border-top border-white border-opacity-10 pt-3">
+          <span><i class="bi bi-shield-check me-1"></i> HIPAA Compliant</span>
+          <span><i class="bi bi-clock-history me-1"></i> 24/7 Portal Access</span>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: GLASSMORPHISM LOGIN FORM CARD -->
+      <div class="col-lg-6 bg-white p-4 p-sm-5 d-flex flex-column justify-content-center position-relative">
+        
+        <!-- Mobile Logo (Visible only on smaller screens) -->
+        <div class="d-lg-none text-center mb-4">
+          <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2 shadow" style="width: 48px; height: 48px;">
+            <i class="bi bi-droplet-fill fs-3"></i>
+          </div>
+          <h3 class="fw-bold text-dark">BloodBridge</h3>
+        </div>
+
+        <!-- Glassmorphism Card Container -->
+        <div class="p-4 p-md-5 rounded-4 border shadow-sm" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);">
+          
+          <div class="mb-4 text-center text-lg-start">
+            <h3 class="fw-bold text-dark mb-1">Account Login</h3>
+            <p class="text-muted small">Enter your credentials to access your dashboard</p>
+          </div>
+
+          <form method="POST">
+            {% csrf_token %}
+            <!-- Username/Email Input -->
+            <div class="mb-3">
+              <label for="loginUsername" class="form-label fw-semibold text-secondary small">Username</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-person-fill"></i></span>
+                <input type="text" class="form-control bg-light border-start-0 ps-0" id="loginUsername" name="username" placeholder="e.g. john_doe" required>
+              </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label fw-semibold text-secondary small">Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" class="form-control bg-light border-start-0 ps-0" id="loginPassword" name="password" placeholder="••••••••" required>
+              </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password Row -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <a href="{% url 'password_reset' %}" class="text-danger text-decoration-none small fw-semibold">Forgot Password?</a>
+            </div>
+
+            <!-- Large Login Button -->
+            <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold shadow-sm mb-3">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Log In
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="position-relative text-center my-4">
+            <hr class="text-muted opacity-25">
+            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">OR</span>
+          </div>
+
+          <!-- Sign Up Footer Callout -->
+          <div class="text-center">
+            <p class="text-muted mb-0 small">
+              Don't have an account? 
+              <a href="{% url 'signup' %}" class="text-danger fw-bold text-decoration-none ms-1">Sign Up</a>
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

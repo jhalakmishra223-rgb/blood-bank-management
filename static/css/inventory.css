@@ -1,0 +1,81 @@
+/* ==========================================================================
+   BloodBridge - Blood Inventory Page Styles
+   ========================================================================== */
+
+:root {
+    --primary-red: #b71c1c;
+    --dark-red: #7a0000;
+    --border-red: #b71c1c;
+    --border-black: #111827;
+    --light-bg: #f8f9fa;
+    --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.14), 0 4px 10px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 20px 42px rgba(183, 28, 28, 0.28), 0 8px 18px rgba(0, 0, 0, 0.14);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hero Badge */
+.hero-badge-light {
+    background-color: #ffebee;
+    color: var(--primary-red);
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    border: 2px solid var(--border-red);
+    box-shadow: 0 4px 12px rgba(183, 28, 28, 0.15);
+}
+
+/* High-Contrast Red & Black Cards */
+.blood-glass-card {
+    background: #ffffff;
+    border: 2px solid var(--border-red);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+}
+
+.blood-glass-card:nth-child(even) {
+    border-color: var(--border-black);
+}
+
+.blood-glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover) !important;
+    border-color: var(--primary-red) !important;
+}
+
+/* Circular Icon Box Styling */
+.icon-box-lg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.icon-box-danger {
+    background-color: #ffebee;
+    color: var(--primary-red);
+    border: 2px solid var(--border-red);
+}
+
+.icon-box-muted {
+    background-color: #f1f5f9;
+    color: #111827;
+    border: 2px solid var(--border-black);
+}
+
+/* Utility Helpers */
+.tracking-wide {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    font-weight: 800;
+}
+
+.time-stamp {
+    font-size: 0.75rem;
+    color: #111827;
+    font-weight: 600;
+}

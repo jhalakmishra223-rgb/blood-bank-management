@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="row justify-content-center text-center mb-4">
+    <div class="col-lg-8">
+      <span class="hero-badge mb-3">
+        <i class="bi bi-droplet-fill"></i> BloodBridge Donor Portal
+      </span>
+      <h1 class="fw-bold text-dark display-5 mb-2">Edit Profile</h1>
+      <p class="text-muted lead fs-6">Keep your donor information updated.</p>
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+      <div class="blood-glass-card p-4 p-md-5">
+        <form method="POST" action="" class="needs-validation" novalidate enctype="multipart/form-data" >
+          {% csrf_token %}
+
+          <!-- Section: Personal Details -->
+           <div class="mb-4">
+    <label class="form-label fw-semibold">
+        Profile Picture
+    </label>
+
+    <input
+        type="file"
+        name="profile_picture"
+        class="form-control"
+        accept="image/*">
+
+    <small class="text-muted">
+        Upload a JPG, PNG, or JPEG image.
+    </small>
+</div>
+          <div class="d-flex align-items-center mb-4">
+            <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">
+              <i class="bi bi-person-badge-fill"></i>
+            </div>
+            <h5 class="fw-bold m-0 text-dark">Personal Information</h5>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <!-- Age Field -->
+            <div class="col-md-4">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-calendar3 input-icon"></i>
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="age" name="age" placeholder="Age" value="{{ donor.age }}" min="18" max="65" required>
+                  <label for="age">Age</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gender Dropdown -->
+            <div class="col-md-4">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-gender-ambiguous input-icon"></i>
+                <div class="form-floating">
+                  <select class="form-select" id="gender" name="gender" aria-label="Gender" required>
+                    <option value="" disabled {% if not donor.gender %}selected{% endif %}>Select</option>
+                    <option value="Male" {% if donor.gender == "Male" %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if donor.gender == "Female" %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if donor.gender == "Other" %}selected{% endif %}>Other</option>
+                  </select>
+                  <label for="gender">Gender</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Blood Group Dropdown -->
+            <div class="col-md-4">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-droplet-half input-icon"></i>
+                <div class="form-floating">
+                  <select class="form-select fw-bold text-danger" id="blood_group" name="blood_group" aria-label="Blood Group" required>
+                    <option value="" disabled {% if not donor.blood_group %}selected{% endif %}>Select</option>
+                    <option value="A+" {% if donor.blood_group == "A+" %}selected{% endif %}>A+</option>
+                    <option value="A-" {% if donor.blood_group == "A-" %}selected{% endif %}>A-</option>
+                    <option value="B+" {% if donor.blood_group == "B+" %}selected{% endif %}>B+</option>
+                    <option value="B-" {% if donor.blood_group == "B-" %}selected{% endif %}>B-</option>
+                    <option value="AB+" {% if donor.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                    <option value="AB-" {% if donor.blood_group == "AB-" %}selected{% endif %}>AB-</option>
+                    <option value="O+" {% if donor.blood_group == "O+" %}selected{% endif %}>O+</option>
+                    <option value="O-" {% if donor.blood_group == "O-" %}selected{% endif %}>O-</option>
+                  </select>
+                  <label for="blood_group">Blood Group</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-4 text-secondary opacity-25">
+
+          <!-- Section: Contact Details -->
+          <div class="d-flex align-items-center mb-4">
+            <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">
+              <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <h5 class="fw-bold m-0 text-dark">Contact & Location</h5>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <!-- Phone Number -->
+            <div class="col-12">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-telephone-fill input-icon"></i>
+                <div class="form-floating">
+                  <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" value="{{ donor.phone }}" required>
+                  <label for="phone">Phone Number</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Textarea -->
+            <div class="col-12">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-house-door-fill input-icon-textarea"></i>
+                <div class="form-floating">
+                  <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" required>{{ donor.address }}</textarea>
+                  <label for="address">Street Address</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="col-md-6">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-building input-icon"></i>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{ donor.city }}" required>
+                  <label for="city">City</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- State -->
+            <div class="col-md-6">
+              <div class="input-icon-wrapper">
+                <i class="bi bi-map-fill input-icon"></i>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="state" name="state" placeholder="State" value="{{ donor.state }}" required>
+                  <label for="state">State</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex flex-column flex-sm-row gap-3 mt-5">
+            <button type="submit" class="btn btn-save flex-grow-1 d-inline-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-check-circle-fill"></i> Save Changes
+            </button>
+            <a href="{% url 'profile' %}" class="btn btn-cancel d-inline-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-arrow-left-circle"></i> Back to Profile
+            </a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

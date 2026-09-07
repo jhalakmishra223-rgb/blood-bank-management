@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Blood Requests | BloodBridge{% endblock %}
+
+{% block content %}
+<!-- Custom Design Styles and Animations -->
+<style>
+    /* Hero & Text Contrast Fixes */
+    .page-header {
+        background: linear-gradient(135deg, #a71d2a 0%, #630d16 100%);
+        position: relative;
+        overflow: hidden;
+        border-bottom: 3px solid #000;
+        padding: 3.5rem 0;
+    }
+
+    .hero-badge-pill {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .text-hero-desc {
+        color: rgba(255, 255, 255, 0.9) !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Keyframe Animations */
+    @keyframes heartPulse {
+        0% { transform: scale(1); opacity: 0.85; }
+        14% { transform: scale(1.15); opacity: 1; }
+        28% { transform: scale(1); opacity: 0.85; }
+        42% { transform: scale(1.15); opacity: 1; }
+        70% { transform: scale(1); opacity: 0.85; }
+    }
+
+    @keyframes floatGraphic {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 0 15px rgba(220, 53, 69, 0.2); }
+        50% { box-shadow: 0 0 25px rgba(220, 53, 69, 0.5); }
+    }
+
+    .pulse-animation {
+        animation: heartPulse 2.2s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    .float-animation {
+        animation: floatGraphic 4s ease-in-out infinite;
+    }
+
+    /* Card & Interface Enhancements */
+    .stat-card {
+        border: 2px solid #000000 !important;
+        border-radius: 14px;
+        background: #ffffff;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, rgba(200,16,46,0.05) 0%, rgba(255,255,255,0) 70%);
+        pointer-events: none;
+    }
+
+    .bb-card {
+        border: 2px solid #000000 !important;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .table-hover-row {
+        transition: background-color 0.2s ease;
+    }
+
+    .table-hover-row:hover {
+        background-color: rgba(200, 16, 46, 0.02) !important;
+    }
+
+    /* Decorative Floating Background Shapes for Hero */
+    .hero-bg-shape {
+        position: absolute;
+        opacity: 0.08;
+        pointer-events: none;
+        color: #ffffff;
+    }
+</style>
+
+<!-- Page Header -->
+<section class="page-header text-center">
+    <!-- Floating Background Decor -->
+    <i class="bi bi-droplet-fill hero-bg-shape float-animation" style="top: 10%; left: 5%; font-size: 5rem; animation-delay: 0s;"></i>
+    <i class="bi bi-heart-pulse-fill hero-bg-shape float-animation" style="bottom: 10%; right: 8%; font-size: 6rem; animation-delay: 1.5s;"></i>
+
+    <div class="container position-relative z-1">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Hero Badge -->
+                <span class="hero-badge-pill d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-bold text-uppercase fs-7 mb-3">
+                    <i class="bi bi-person-lines-fill"></i>
+                    Patient Request Portal
+                </span>
+
+                <!-- Animated Main Title -->
+                <h1 class="fw-extrabold display-5 mb-3 text-white d-flex align-items-center justify-content-center gap-3">
+                    <i class="bi bi-activity pulse-animation text-danger-light"></i>
+                    My Blood Requests
+                </h1>
+
+                <!-- Text Color set to Crisp White/High Contrast -->
+                <p class="lead mb-0 text-hero-desc max-width-600 mx-auto fw-normal">
+                    Track real-time updates, approval workflows, and fulfillment status for all your submitted blood requests.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dashboard Section -->
+<section class="section-padding pt-5">
+    <div class="container">
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-5">
+
+            <!-- Total -->
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-3 p-md-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="stat-icon-wrapper bg-light text-dark border border-dark rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="bi bi-card-checklist fs-4"></i>
+                        </div>
+                        <span class="badge bg-secondary-subtle text-secondary border rounded-pill fs-8 fw-bold">All</span>
+                    </div>
+                    <h3 class="fw-black mt-3 mb-1 display-6">{{ total_requests }}</h3>
+                    <p class="text-muted mb-0 fs-7 text-uppercase fw-extrabold tracking-wider">
+                        Total Requests
+                    </p>
+                </div>
+            </div>
+
+            <!-- Pending -->
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-3 p-md-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="stat-icon-wrapper bg-warning-subtle text-warning border border-warning rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="bi bi-hourglass-split fs-4 pulse-animation"></i>
+                        </div>
+                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning rounded-pill fs-8 fw-bold">In Review</span>
+                    </div>
+                    <h3 class="fw-black mt-3 mb-1 text-warning display-6">{{ pending_requests }}</h3>
+                    <p class="text-muted mb-0 fs-7 text-uppercase fw-extrabold tracking-wider">
+                        Pending
+                    </p>
+                </div>
+            </div>
+
+            <!-- Approved -->
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-3 p-md-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="stat-icon-wrapper bg-primary-subtle text-primary border border-primary rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="bi bi-shield-check fs-4"></i>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary rounded-pill fs-8 fw-bold">Verified</span>
+                    </div>
+                    <h3 class="fw-black mt-3 mb-1 text-primary display-6">{{ approved_requests }}</h3>
+                    <p class="text-muted mb-0 fs-7 text-uppercase fw-extrabold tracking-wider">
+                        Approved
+                    </p>
+                </div>
+            </div>
+
+            <!-- Fulfilled -->
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-3 p-md-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="stat-icon-wrapper bg-success-subtle text-success border border-success rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="bi bi-check-circle-fill fs-4"></i>
+                        </div>
+                        <span class="badge bg-success-subtle text-success border border-success rounded-pill fs-8 fw-bold">Completed</span>
+                    </div>
+                    <h3 class="fw-black mt-3 mb-1 text-success display-6">{{ fulfilled_requests }}</h3>
+                    <p class="text-muted mb-0 fs-7 text-uppercase fw-extrabold tracking-wider">
+                        Fulfilled
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Requests Table Card -->
+        <div class="row">
+            <div class="col-12">
+                <div class="bb-card p-4">
+
+                    <!-- Table Header Section -->
+                    <div class="d-flex flex-wrap align-items-center justify-content-between border-bottom pb-3 mb-4 gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-2 bg-danger-subtle text-danger border border-danger rounded-3 float-animation">
+                                <i class="bi bi-journal-medical fs-3"></i>
+                            </div>
+                            <div>
+                                <span class="text-danger fw-extrabold text-uppercase tracking-wider fs-7 d-block">
+                                    Request Records
+                                </span>
+                                <h2 class="fw-extrabold h4 mt-0 mb-0 text-dark">
+                                    Submitted Blood Applications
+                                </h2>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'request_blood' %}" class="btn btn-danger btn-lg d-none d-sm-inline-flex align-items-center gap-2 fs-7 fw-bold border border-dark shadow-sm rounded-pill px-4">
+                            <i class="bi bi-plus-lg fs-6"></i>
+                            New Request
+                        </a>
+                    </div>
+
+                    {% if requests %}
+                    <div class="table-responsive">
+                        <table class="bb-table align-middle table table-borderless mb-0">
+                            <thead class="border-bottom border-2">
+                                <tr class="text-muted fs-7 text-uppercase tracking-wider">
+                                    <th class="pb-3">Patient Name</th>
+                                    <th class="pb-3">Blood Group</th>
+                                    <th class="pb-3">Units Needed</th>
+                                    <th class="pb-3">Hospital</th>
+                                    <th class="pb-3">Required Date</th>
+                                    <th class="pb-3">Urgency</th>
+                                    <th class="pb-3">Status</th>
+                                    <th class="pb-3">Requested On</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for request in requests %}
+                                <tr class="table-hover-row border-bottom align-middle">
+
+                                    <!-- Patient Name -->
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="stat-icon-wrapper bg-light text-dark border border-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                                                <i class="bi bi-person-fill"></i>
+                                            </div>
+                                            <span class="fw-bold text-dark">
+                                                {{ request.patient_name }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Blood Group -->
+                                    <td class="py-3">
+                                        <span class="badge bg-danger text-white border border-dark rounded-circle d-inline-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 38px; height: 38px; font-size: 0.85rem;">
+                                            {{ request.blood_group }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Units -->
+                                    <td class="py-3">
+                                        <span class="fw-bold text-dark d-inline-flex align-items-center gap-1">
+                                            <i class="bi bi-droplet-fill text-danger fs-7"></i>
+                                            {{ request.units_required }} Unit{{ request.units_required|pluralize }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Hospital -->
+                                    <td class="py-3">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold text-dark fs-7">
+                                                <i class="bi bi-hospital me-1 text-secondary"></i>
+                                                {{ request.hospital_name }}
+                                            </span>
+                                            {% if request.city %}
+                                            <small class="text-muted fs-7 ms-3">
+                                                <i class="bi bi-geo-alt"></i>
+                                                {{ request.city }}
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    <!-- Required Date -->
+                                    <td class="py-3">
+                                        <span class="text-dark fs-7 font-monospace fw-semibold bg-light px-2 py-1 rounded border">
+                                            <i class="bi bi-calendar-event me-1 text-danger"></i>
+                                            {{ request.required_date|date:"M d, Y" }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Urgency -->
+                                    <td class="py-3">
+                                        {% if request.urgency|lower == 'critical' %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2 fs-7 fw-bold pulse-animation">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                            {{ request.urgency }}
+                                        </span>
+                                        {% elif request.urgency|lower == 'high' %}
+                                        <span class="badge bg-warning-subtle text-dark border border-warning-subtle rounded-pill px-3 py-2 fs-7 fw-bold">
+                                            <i class="bi bi-clock-fill me-1"></i>
+                                            {{ request.urgency }}
+                                        </span>
+                                        {% elif request.urgency|lower == 'medium' %}
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3 py-2 fs-7 fw-bold">
+                                            {{ request.urgency }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 fs-7 fw-bold">
+                                            {{ request.urgency }}
+                                        </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="py-3">
+                                        {% if request.status|lower == 'pending' %}
+                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning rounded-pill px-3 py-2 fs-7 fw-bold">
+                                            <i class="bi bi-hourglass-split me-1 pulse-animation"></i>
+                                            Pending
+                                        </span>
+                                        {% elif request.status|lower == 'approved' %}
+                                        <span class="badge bg-primary text-white border border-dark rounded-pill px-3 py-2 fs-7 fw-bold shadow-sm">
+                                            <i class="bi bi-patch-check-fill me-1"></i>
+                                            Approved
+                                        </span>
+                                        {% elif request.status|lower == 'rejected' %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger rounded-pill px-3 py-2 fs-7 fw-bold">
+                                            <i class="bi bi-x-circle-fill me-1"></i>
+                                            Rejected
+                                        </span>
+                                        {% elif request.status|lower == 'fulfilled' %}
+                                        <span class="badge bg-success text-white border border-dark rounded-pill px-3 py-2 fs-7 fw-bold shadow-sm">
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+                                            Fulfilled
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-secondary text-white rounded-pill px-3 py-2 fs-7 fw-bold">
+                                            {{ request.status }}
+                                        </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Requested On -->
+                                    <td class="py-3">
+                                        <small class="text-muted font-monospace">
+                                            {{ request.requested_on|date:"M d, Y" }}
+                                        </small>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% else %}
+
+                    <!-- Empty State with Pulse Animation -->
+                    <div class="text-center py-5 my-3">
+                        <div class="rounded-circle bg-danger-subtle text-danger d-inline-flex align-items-center justify-content-center p-4 mb-4 border border-dark pulse-animation" style="width: 90px; height: 90px;">
+                            <i class="bi bi-inbox display-5"></i>
+                        </div>
+
+                        <h3 class="fw-extrabold h4 text-dark mb-2">
+                            No Blood Requests Submitted Yet
+                        </h3>
+
+                        <p class="text-muted max-width-600 mx-auto mb-4 fs-6">
+                            You haven't made any blood requests yet. If you or someone you know requires blood, you can submit a request through BloodBridge.
+                        </p>
+
+                        <a href="{% url 'request_blood' %}" class="btn btn-danger btn-lg rounded-pill px-4 py-3 fw-bold border border-dark shadow-sm d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-plus-circle-fill fs-5"></i>
+                            Request Blood Now
+                        </a>
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

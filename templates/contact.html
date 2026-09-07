@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% block title %}
+Contact | BloodBridge
+{% endblock %}
+{% block content %}
+<!-- Custom Page Specific Styles -->
+<style>
+    /* Smooth Scroll Behavior */
+    html {
+        scroll-behavior: smooth;
+    }
+    /* Hero Gradient & Vector Animation */
+    .hero-deep-red {
+        background: linear-gradient(135deg, #8B0000 0%, #B22222 50%, #dc3545 100%);
+    }
+    .hero-handshake-wrapper {
+        position: relative;
+        display: inline-block;
+        animation: floatHandshake 3.5s ease-in-out infinite;
+    }
+    .hero-handshake-icon {
+        font-size: 5.5rem;
+        color: #ffffff;
+        text-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        animation: shakeHands 2.5s infinite ease-in-out;
+        display: inline-block;
+        transform-origin: center center;
+    }
+    .pulse-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+        z-index: 0;
+        animation: pulseRing 2s infinite ease-out;
+    }
+    @keyframes shakeHands {
+        0%, 100% { transform: rotate(0deg); }
+        20% { transform: rotate(-12deg); }
+        40% { transform: rotate(10deg); }
+        60% { transform: rotate(-6deg); }
+        80% { transform: rotate(4deg); }
+    }
+    @keyframes floatHandshake {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    @keyframes pulseRing {
+        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+        100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+    }
+    /* Contact Cards Styling */
+    .contact-card {
+        background: #f8f9fa;
+        border: 1px solid rgba(220, 53, 69, 0.18);
+        border-radius: 1.25rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .contact-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #dc3545;
+        opacity: 0.85;
+        transition: opacity 0.3s ease;
+    }
+    .contact-card:hover {
+        background: #ffffff;
+        transform: translateY(-8px);
+        border-color: #dc3545;
+        box-shadow: 0 16px 32px rgba(220, 53, 69, 0.18) !important;
+    }
+    .contact-card:hover::before {
+        opacity: 1;
+    }
+    /* Emergency Card Special Styling */
+    .contact-card-emergency {
+        background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .contact-card-emergency:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 32px rgba(220, 53, 69, 0.35) !important;
+    }
+    /* Glassmorphic Form Wrapper */
+    .glass-form-card {
+        background: #ffffff;
+        border-radius: 1.25rem;
+        border: 1px solid rgba(220, 53, 69, 0.15);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+    }
+    /* Custom Form Control Styling */
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        transition: all 0.2s ease-in-out;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.2);
+    }
+    /* Map Card Frame */
+    .map-frame-container {
+        border-radius: 1rem;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        min-height: 380px;
+    }
+    .map-overlay-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        padding: 8px 16px;
+        border-radius: 50rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+</style>
+<!-- =========================================================
+     ALERT MESSAGES
+========================================================= -->
+<div class="container pt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show shadow-sm border-0" role="alert">
+                {% if message.tags == "success" %}
+                    <i class="bi bi-check-circle-fill me-2 fs-5 align-middle"></i>
+                {% elif message.tags == "error" %}
+                    <i class="bi bi-exclamation-circle-fill me-2 fs-5 align-middle"></i>
+                {% else %}
+                    <i class="bi bi-info-circle-fill me-2 fs-5 align-middle"></i>
+                {% endif %}
+
+                <span>{{ message }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+<!-- =========================================================
+     HERO SECTION
+========================================================= -->
+<section class="hero-deep-red text-white py-5 position-relative overflow-hidden shadow-sm">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 text-center text-lg-start">
+                <span class="badge bg-white text-danger fw-bold mb-3 px-3 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-heart-pulse-fill me-1"></i> We Are Here For You
+                </span>
+                <h1 class="display-4 fw-black text-white mb-3">
+                    Let's Connect & Save Lives
+                </h1>
+                <p class="lead text-white-50 mb-4">
+                    Have questions about blood donation, need technical support, or want to partner with us for a donation drive? Reach out to our dedicated team today.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="#contact-form" class="btn btn-light btn-lg px-4 text-danger fw-bold shadow-sm">
+                        <i class="bi bi-envelope-fill me-2"></i> Send Message
+                    </a>
+                    <!-- Updated Emergency Line Display Text -->
+                    <a href="tel:18007334357" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+                        <i class="bi bi-telephone-outbound-fill me-2"></i> 1-800-RED-HELP
+                    </a>
+                </div>
+            </div>
+            <!-- Shaking Hands Animated Vector -->
+            <div class="col-lg-5 text-center">
+                <div class="hero-handshake-wrapper my-3">
+                    <div class="pulse-glow"></div>
+                    <i class="bi bi-hand-thumbs-up-fill hero-handshake-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- =========================================================
+     CONTACT INFORMATION CARDS
+========================================================= -->
+<section class="py-5 bg-white">
+    <div class="container py-2">
+        <div class="row g-4">
+            <!-- PHONE -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card h-100 p-4 text-center">
+                    <div class="rounded-circle bg-danger text-white d-inline-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm" style="width: 65px; height: 65px;">
+                        <i class="bi bi-telephone-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Phone</h5>
+                    <p class="small mb-1">
+                        <a href="tel:18005550199" class="text-decoration-none text-secondary fw-semibold">+1 (800) 555-0199</a>
+                    </p>
+                    <p class="small mb-0">
+                        <a href="tel:18005550120" class="text-decoration-none text-secondary fw-semibold">+1 (800) 555-0120</a>
+                    </p>
+                </div>
+            </div>
+            <!-- EMAIL -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card h-100 p-4 text-center">
+                    <div class="rounded-circle bg-danger text-white d-inline-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm" style="width: 65px; height: 65px;">
+                        <i class="bi bi-envelope-open-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Email</h5>
+                    <p class="small mb-1">
+                        <a href="mailto:support@bloodbridge.org?subject=Support%20Inquiry" class="text-decoration-none text-secondary fw-semibold">support@bloodbridge.org</a>
+                    </p>
+                    <p class="small mb-0">
+                        <a href="mailto:info@bloodbridge.org?subject=General%20Inquiry" class="text-decoration-none text-secondary fw-semibold">info@bloodbridge.org</a>
+                    </p>
+                </div>
+            </div>
+            <!-- ADDRESS -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card h-100 p-4 text-center">
+                    <div class="rounded-circle bg-danger text-white d-inline-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm" style="width: 65px; height: 65px;">
+                        <i class="bi bi-geo-alt-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Location</h5>
+                    <a href="https://www.google.com/maps/search/?api=1&query=123+Health+Ave+Suite+400+Medical+City" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                        <p class="text-secondary small fw-semibold mb-0">123 Health Ave, Suite 400</p>
+                        <p class="text-secondary small fw-semibold mb-0">Medical City, MC 90210</p>
+                    </a>
+                </div>
+            </div>
+            <!-- EMERGENCY HELPLINE -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card contact-card-emergency h-100 p-4 text-center text-white border-0 shadow">
+                    <div class="rounded-circle bg-white text-danger d-inline-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 65px; height: 65px;">
+                        <i class="bi bi-exclamation-diamond-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">24/7 Hotline</h5>
+                    <a href="tel:18007334357" class="fs-6 fw-bold text-white text-decoration-underline d-block mb-1">
+                        <i class="bi bi-telephone-outbound-fill me-1"></i> +1 (800) RED-HELP
+                    </a>
+                    <p class="small text-white-50 mb-0">Emergency Dispatch Only</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- =========================================================
+     CONTACT FORM + MAP SECTION
+========================================================= -->
+<section class="py-5 bg-light border-top border-bottom" id="contact-form">
+    <div class="container py-4">
+        <div class="row g-5 align-items-stretch">
+            <!-- CONTACT FORM -->
+            <div class="col-lg-7">
+                <div class="glass-form-card p-4 p-md-5 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-danger text-white rounded-3 p-2 me-3">
+                            <i class="bi bi-send-check-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="fw-bold mb-0 text-dark">Send Us a Message</h3>
+                            <p class="text-muted small mb-0">Fill out the details below and we will get back to you within 24 hours.</p>
+                        </div>
+                    </div>
+                    <hr class="my-4 text-muted opacity-25">
+                    <form method="POST" action="{% url 'contact' %}" id="mainContactForm" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <!-- FULL NAME -->
+                            <div class="col-md-6">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label fw-semibold text-dark">Full Name</label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.full_name.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- EMAIL -->
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold text-dark">Email Address</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.email.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- SUBJECT -->
+                            <div class="col-12">
+                                <label for="{{ form.subject.id_for_label }}" class="form-label fw-semibold text-dark">Subject</label>
+                                {{ form.subject }}
+                                {% if form.subject.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.subject.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- MESSAGE -->
+                            <div class="col-12">
+                                <label for="{{ form.message.id_for_label }}" class="form-label fw-semibold text-dark">Message</label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.message.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- SUBMIT -->
+                            <div class="col-12 mt-4">
+                                <button type="submit" id="submitBtn" class="btn btn-danger btn-lg px-4 w-100 shadow-sm fw-bold">
+                                    <i class="bi bi-paperplane-fill me-2"></i> Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- MAP / LOCATION -->
+            <div class="col-lg-5">
+                <div class="bg-white p-4 rounded-4 shadow-sm border h-100 d-flex flex-column">
+                    <h5 class="fw-bold text-dark mb-3">
+                        <i class="bi bi-map-fill text-danger me-2"></i> Find Our HQ
+                    </h5>
+                    <!-- Embedded Interactive Map -->
+                    <div class="map-frame-container flex-grow-1">
+                        <div class="map-overlay-badge">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                            <span class="fw-bold small text-dark">BloodBridge HQ</span>
+                        </div>
+                        <iframe 
+                            class="w-100 h-100 border-0" 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509374!2d144.95373531531615!3d-37.81627977975171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d4c2b349649%3A0xb6899234e561db11!2sEnvato!5e0!3m2!1sen!2s!4v1614050212345!5m2!1sen!2s" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    <div class="mt-3 pt-2 d-flex justify-content-between align-items-center">
+                        <small class="text-muted"><i class="bi bi-clock me-1"></i> Mon-Fri: 8 AM - 8 PM</small>
+                        <a href="https://www.google.com/maps/search/?api=1&query=123+Health+Ave+Suite+400+Medical+City" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-danger rounded-pill fw-semibold">
+                            Get Directions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- =========================================================
+     FAQ SECTION
+========================================================= -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+            <span class="badge bg-danger-subtle text-danger fw-bold mb-2">Got Questions?</span>
+            <h2 class="fw-bold text-dark">Frequently Asked Questions</h2>
+            <p class="text-muted">Find quick answers regarding our response times and emergency procedures.</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion accordion-flush shadow-sm rounded-4 border overflow-hidden" id="contactFaqAccordion">
+                    <!-- FAQ 1 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingOne">
+                            <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true" aria-controls="faqOne">
+                                How do I request blood in an emergency?
+                            </button>
+                        </h2>
+                        <div id="faqOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#contactFaqAccordion">
+                            <div class="accordion-body text-muted">
+                                For urgent requirements, call our emergency helpline or use the blood request feature available to registered users.
+                                <div class="mt-3">
+                                    <a href="{% url 'request_blood' %}" class="btn btn-sm btn-danger rounded-pill px-3">
+                                        <i class="bi bi-droplet-fill me-1"></i> Request Blood
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ 2 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwo">
+                            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
+                                How can my organization host a blood donation camp?
+                            </button>
+                        </h2>
+                        <div id="faqTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#contactFaqAccordion">
+                            <div class="accordion-body text-muted">
+                                You can contact the BloodBridge team using the form above. Select an appropriate subject and describe the donation camp requirements.
+                                <div class="mt-3">
+                                    <a href="#contact-form" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                        <i class="bi bi-envelope me-1"></i> Contact Our Team
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ 3 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingThree">
+                            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
+                                How fast will I receive a response to my online inquiry?
+                            </button>
+                        </h2>
+                        <div id="faqThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#contactFaqAccordion">
+                            <div class="accordion-body text-muted">
+                                Your message is submitted directly to the BloodBridge system and can be reviewed by authorized administrators. If the matter is urgent, please use the emergency telephone number shown above.
+                                <div class="mt-3">
+                                    <a href="tel:18007334357" class="btn btn-sm btn-danger rounded-pill px-3">
+                                        <i class="bi bi-telephone-fill me-1"></i> Call Emergency Hotline
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Custom JavaScript for Form Handling -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const contactForm = document.getElementById('mainContactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        if (contactForm && submitBtn) {
+            contactForm.addEventListener('submit', function () {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...`;
+            });
+        }
+    });
+</script>
+{% endblock %}

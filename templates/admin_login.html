@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Admin Login | BloodBridge{% endblock %}
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-shield-lock-fill text-danger display-2"></i>
+                            <h2 class="fw-bold mt-3">
+                                Admin Login
+                            </h2>
+                            <p class="text-muted">
+                                BloodBridge Administration Portal
+                            </p>
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Username
+                                </label>
+                                <input
+                                    type="text"
+                                    name="username"
+                                    class="form-control form-control-lg"
+                                    placeholder="Enter username"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    class="form-control form-control-lg"
+                                    placeholder="Enter password"
+                                    required>
+                            </div>
+                            <div class="d-grid">
+                                <button class="btn btn-danger btn-lg rounded-pill">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                                    Login as Admin
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

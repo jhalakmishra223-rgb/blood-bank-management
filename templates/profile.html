@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block content %}
+</div>
+<div class="container py-5">
+  <!-- Hero Section -->
+<div class="hero-banner glass-card p-4 mb-4">
+    <div class="row align-items-center">
+        <!-- Left Side -->
+        <div class="col-lg-8">
+            <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2 mb-3">
+                <i class="bi bi-droplet-fill me-1"></i>
+                BloodBridge Donor
+            </span>
+            <h2 class="fw-bold mb-3">
+                {% if request.user.get_full_name %}
+                    {{ request.user.get_full_name }}
+                {% else %}
+                    {{ request.user.username }}
+                {% endif %}
+            </h2>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-danger text-white px-3 py-2 rounded-pill">
+                    <i class="bi bi-droplet-fill me-1"></i>
+                    {% if donor.blood_group %}
+                        {{ donor.blood_group }}
+                    {% else %}
+                        Blood Group Not Updated
+                    {% endif %}
+                </span>
+                <span class="badge bg-success px-3 py-2 rounded-pill">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Active Donor
+                </span>
+            </div>
+            <div class="mt-4">
+                <p class="mb-2">
+                    <i class="bi bi-envelope-fill text-danger me-2"></i>
+                    {{ request.user.email }}
+                </p>
+                <p class="mb-2">
+                    <i class="bi bi-telephone-fill text-danger me-2"></i>
+                    {% if donor.phone %}
+                        {{ donor.phone }}
+                    {% else %}
+                        Not Updated Yet
+                    {% endif %}
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                    {% if donor.city %}
+                        {{ donor.city }}, {{ donor.state }}
+                    {% else %}
+                        Location Not Updated
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <!-- Right Side -->
+        <div class="col-lg-4 text-center">
+            {% if donor.profile_picture %}
+                <img src="{{ donor.profile_picture.url }}"
+                     class="rounded-circle shadow-lg border border-4 border-danger"
+                     width="190"
+                     height="190"
+                     style="object-fit:cover;">
+            {% else %}
+                <i class="bi bi-person-circle text-danger"
+                   style="font-size:190px;"></i>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+  <!-- Quick Stats Cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="glass-card hover-lift p-4 d-flex align-items-center gap-3">
+        <div class="stat-icon-wrapper">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div>
+          <div class="info-label">Total Donations</div>
+          <div class="fs-3 fw-bold text-dark">
+            {% if donor.total_donations %}{{ donor.total_donations }}{% else %}0{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="glass-card hover-lift p-4 d-flex align-items-center gap-3">
+        <div class="stat-icon-wrapper">
+          <i class="bi bi-activity"></i>
+        </div>
+        <div>
+          <div class="info-label">Blood Requests</div>
+          <div class="fs-3 fw-bold text-dark">
+            {% if donor.blood_requests_count %}{{ donor.blood_requests_count }}{% else %}0{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="glass-card hover-lift p-4 d-flex align-items-center gap-3">
+        <div class="stat-icon-wrapper">
+          <i class="bi bi-patch-check-fill"></i>
+        </div>
+        <div>
+          <div class="info-label">Profile Completion</div>
+          <div class="fs-3 fw-bold text-dark">
+            {% if donor.profile_completion %}{{ donor.profile_completion }}%{% else %}85%{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Information Card -->
+  <div class="glass-card p-4 p-md-5 mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+      <h4 class="fw-bold m-0 text-dark d-flex align-items-center gap-2">
+        <i class="bi bi-person-vcard text-danger fs-3"></i> Personal Information
+      </h4>
+    </div>
+
+    <div class="row g-4">
+      <!-- Full Name -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-person me-1"></i> Full Name</div>
+        <div class="info-value">
+          {% if request.user.first_name or request.user.last_name %}
+            {{ request.user.first_name }} {{ request.user.last_name }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-at me-1"></i> Username</div>
+        <div class="info-value">
+          {% if request.user.username %}
+            {{ request.user.username }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-envelope me-1"></i> Email Address</div>
+        <div class="info-value">
+          {% if request.user.email %}
+            {{ request.user.email }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-telephone me-1"></i> Phone Number</div>
+        <div class="info-value">
+          {% if donor.phone %}
+            {{ donor.phone }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Age -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-calendar-event me-1"></i> Age</div>
+        <div class="info-value">
+          {% if donor.age %}
+            {{ donor.age }} Years
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Gender -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-gender-ambiguous me-1"></i> Gender</div>
+        <div class="info-value">
+          {% if donor.gender %}
+            {{ donor.gender }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Blood Group -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-droplet me-1"></i> Blood Group</div>
+        <div class="info-value">
+          {% if donor.blood_group %}
+            <span class="badge bg-danger-subtle text-danger fw-bold px-3 py-1 rounded-pill">
+              {{ donor.blood_group }}
+            </span>
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-geo-alt me-1"></i> Address</div>
+        <div class="info-value">
+          {% if donor.address %}
+            {{ donor.address }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- City -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-building me-1"></i> City</div>
+        <div class="info-value">
+          {% if donor.city %}
+            {{ donor.city }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- State -->
+      <div class="col-12 col-md-6">
+        <div class="info-label"><i class="bi bi-map me-1"></i> State</div>
+        <div class="info-value">
+          {% if donor.state %}
+            {{ donor.state }}
+          {% else %}
+            <span class="text-not-updated">Not Updated Yet</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons Section -->
+  <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 pt-2">
+    <a href="{% url 'dashboard' %}" class="btn btn-bb-secondary d-inline-flex align-items-center justify-content-center gap-2">
+      <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+    <a href="{% url 'change_password' %}" class="btn btn-bb-outline d-inline-flex align-items-center justify-content-center gap-2">
+      <i class="bi bi-key-fill"></i> Change Password
+    </a>
+    <a href="{% url 'edit_profile' %}" class="btn btn-bb-primary d-inline-flex align-items-center justify-content-center gap-2">
+      <i class="bi bi-pencil-square"></i> Edit Profile
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,693 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}View User | BloodBridge{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom Styling & Animations for BloodBridge User Profile */
+    .hero-cover {
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 50%, #880e4f 100%);
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.25rem 1.25rem 0 0;
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+    }
+
+    .hero-bg-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        animation: floatShape 8s infinite ease-in-out;
+    }
+
+    .hero-bg-shape-1 {
+        width: 220px;
+        height: 220px;
+        top: -50px;
+        right: -30px;
+    }
+
+    .hero-bg-shape-2 {
+        width: 140px;
+        height: 140px;
+        bottom: -20px;
+        left: 10%;
+        animation-delay: -3s;
+    }
+
+    @keyframes floatShape {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-15px) scale(1.03); }
+    }
+
+    .profile-card-wrapper {
+        border-radius: 1.25rem;
+        overflow: hidden;
+        border: none;
+    }
+
+    .avatar-container {
+        margin-top: -4.5rem;
+        position: relative;
+        display: inline-block;
+        z-index: 5;
+    }
+
+    .avatar-img, .avatar-placeholder {
+        width: 130px;
+        height: 130px;
+        border: 5px solid #ffffff;
+        box-shadow: 0 10px 25px rgba(211, 47, 47, 0.25);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .avatar-container:hover .avatar-img, 
+    .avatar-container:hover .avatar-placeholder {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(211, 47, 47, 0.35);
+    }
+
+    .status-pulse-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    .status-pulse-dot.active {
+        background-color: #198754;
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+        animation: pulseGreen 2s infinite;
+    }
+
+    .status-pulse-dot.inactive {
+        background-color: #dc3545;
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+        animation: pulseRed 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+        0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); }
+        70% { box-shadow: 0 0 0 8px rgba(25, 135, 84, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+    }
+
+    @keyframes pulseRed {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { box-shadow: 0 0 0 8px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+
+    .hover-row {
+        transition: all 0.25s ease;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .hover-row:hover {
+        background-color: rgba(211, 47, 47, 0.04);
+        transform: translateX(4px);
+    }
+
+    .hover-row:hover .row-icon {
+        color: #d32f2f !important;
+        transform: scale(1.1);
+    }
+
+    .row-icon {
+        transition: all 0.25s ease;
+    }
+
+    .stat-card-modern {
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card-modern:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    .card-bb-header {
+        background: #fff;
+        border-bottom: 2px solid rgba(211, 47, 47, 0.1);
+    }
+
+    .btn-bb-action {
+        transition: all 0.3s ease;
+    }
+
+    .btn-bb-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hero-bg-shape, .avatar-img, .avatar-placeholder, .status-pulse-dot, .hover-row, .stat-card-modern, .btn-bb-action {
+            animation: none !important;
+            transition: none !important;
+            transform: none !important;
+        }
+    }
+</style>
+
+<div class="container-fluid section-padding">
+
+    <!-- PROFILE HERO / COVER SECTION -->
+    <div class="card bb-card border-0 shadow-sm profile-card-wrapper mb-4">
+        <div class="hero-cover text-white p-4 p-md-5">
+            <div class="hero-bg-shape hero-bg-shape-1"></div>
+            <div class="hero-bg-shape hero-bg-shape-2"></div>
+            
+            <div class="row align-items-center position-relative z-1">
+                <div class="col-lg-8">
+                    <span class="badge bg-white text-danger fw-bold text-uppercase px-3 py-2 rounded-pill mb-3 tracking-wider shadow-sm">
+                        <i class="bi bi-person-badge-fill me-1"></i> User Profile
+                    </span>
+                    <h1 class="display-5 fw-bold mb-2">
+                        {% if selected_user.get_full_name %}
+                            {{ selected_user.get_full_name }}
+                        {% else %}
+                            {{ selected_user.username }}
+                        {% endif %}
+                    </h1>
+                    <p class="lead mb-0 text-white-50">
+                        View complete account information, donor details, and request history.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end d-none d-lg-block">
+                    <i class="bi bi-person-lines-fill display-1 text-white-50 opacity-25"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- USER IDENTITY BAR -->
+        <div class="card-body bg-white p-4 pt-0">
+            <div class="row align-items-end">
+                <div class="col-12 col-md-auto text-center text-md-start">
+                    <div class="avatar-container">
+                        {% if donor and donor.profile_picture %}
+                            <img src="{{ donor.profile_picture.url }}" alt="{{ selected_user.username }}" class="rounded-circle object-fit-cover avatar-img">
+                        {% else %}
+                            <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center avatar-placeholder">
+                                <i class="bi bi-person-circle fs-1 text-danger opacity-75"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-12 col-md mt-3 mt-md-0 text-center text-md-start">
+                    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2 mb-2">
+                        <h3 class="fw-bold text-dark mb-0">
+                            {% if selected_user.get_full_name %}
+                                {{ selected_user.get_full_name }}
+                            {% else %}
+                                {{ selected_user.username }}
+                            {% endif %}
+                        </h3>
+
+                        <!-- System Role Badge -->
+                        <span class="badge bg-secondary-subtle text-dark border border-secondary-subtle rounded-pill px-3 py-1.5 fw-bold ms-1">
+                            <i class="bi bi-person-fill me-1"></i> Standard User
+                        </span>
+
+                        <!-- Account Status Badge & Indicator -->
+                        {% if selected_user.is_active %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 fw-bold d-inline-flex align-items-center">
+                                <span class="status-pulse-dot active"></span> Active
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1.5 fw-bold d-inline-flex align-items-center">
+                                <span class="status-pulse-dot inactive"></span> Inactive
+                            </span>
+                        {% endif %}
+
+                        {% if donor and donor.blood_group %}
+                            <span class="badge bg-danger text-white rounded-pill px-3 py-1.5 fw-bold shadow-sm">
+                                <i class="bi bi-droplet-fill me-1"></i>{{ donor.blood_group }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-at text-danger me-1"></i>{{ selected_user.username }}
+                        {% if selected_user.email %}
+                            <span class="mx-2">•</span>
+                            <i class="bi bi-envelope me-1"></i>{{ selected_user.email }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAILS GRID: ACCOUNT INFO + DONOR PROFILE -->
+    <div class="row g-4 mb-4">
+
+        <!-- Account Information Card -->
+        <div class="col-12 col-lg-6">
+            <div class="card bb-card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-header card-bb-header py-3 px-4 fw-bold text-uppercase fs-7 text-dark d-flex align-items-center">
+                    <i class="bi bi-shield-lock-fill text-danger me-2 fs-5"></i> Account Information
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle mb-0">
+                            <tbody>
+                                <tr class="border-bottom hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3" style="width: 38%;">
+                                        <i class="bi bi-person me-2 text-muted row-icon"></i>Full Name
+                                    </th>
+                                    <td class="fw-bold text-dark py-3">
+                                        {% if selected_user.get_full_name %}
+                                            {{ selected_user.get_full_name }}
+                                        {% else %}
+                                            {{ selected_user.username }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3">
+                                        <i class="bi bi-at me-2 text-muted row-icon"></i>Username
+                                    </th>
+                                    <td class="fw-bold text-dark py-3">
+                                        @{{ selected_user.username }}
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3">
+                                        <i class="bi bi-envelope me-2 text-muted row-icon"></i>Email Address
+                                    </th>
+                                    <td class="text-dark py-3">
+                                        {% if selected_user.email %}
+                                            <a href="mailto:{{ selected_user.email }}" class="text-decoration-none text-danger fw-medium">
+                                                <i class="bi bi-envelope-fill me-1"></i>{{ selected_user.email }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Not Provided</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3">
+                                        <i class="bi bi-activity me-2 text-muted row-icon"></i>Account Status
+                                    </th>
+                                    <td class="py-3">
+                                        {% if selected_user.is_active %}
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 fw-bold">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Active
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1.5 fw-bold">
+                                                <i class="bi bi-x-circle-fill me-1"></i> Inactive
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3">
+                                        <i class="bi bi-shield-check me-2 text-muted row-icon"></i>System Role
+                                    </th>
+                                    <td class="py-3">
+                                        <span class="badge bg-secondary-subtle text-dark border border-secondary-subtle rounded-pill px-3 py-1.5 fw-bold">
+                                            <i class="bi bi-person-fill me-1"></i> Standard User
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3">
+                                        <i class="bi bi-calendar-check me-2 text-muted row-icon"></i>Date Joined
+                                    </th>
+                                    <td class="text-dark py-3">
+                                        <i class="bi bi-calendar-event me-1 text-muted"></i>
+                                        {{ selected_user.date_joined|date:"F d, Y - H:i" }}
+                                    </td>
+                                </tr>
+                                <tr class="hover-row">
+                                    <th scope="row" class="text-muted fw-semibold py-3">
+                                        <i class="bi bi-clock-history me-2 text-muted row-icon"></i>Last Login
+                                    </th>
+                                    <td class="text-dark py-3">
+                                        {% if selected_user.last_login %}
+                                            <i class="bi bi-clock-history me-1 text-muted"></i>
+                                            {{ selected_user.last_login|date:"F d, Y - H:i" }}
+                                        {% else %}
+                                            <span class="text-muted">Never logged in</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donor Profile Information Card -->
+        <div class="col-12 col-lg-6">
+            <div class="card bb-card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-header card-bb-header py-3 px-4 fw-bold text-uppercase fs-7 text-dark d-flex align-items-center">
+                    <i class="bi bi-heart-pulse-fill text-danger me-2 fs-5"></i> Donor Profile Information
+                </div>
+                <div class="card-body p-4">
+                    {% if donor %}
+                        <!-- Top Avatar & Identity Row -->
+                        <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                            <div class="flex-shrink-0 me-3">
+                                {% if donor.profile_picture %}
+                                    <img src="{{ donor.profile_picture.url }}" alt="{{ selected_user.username }}" class="rounded-circle object-fit-cover border border-2 border-danger-subtle shadow-sm" width="64" height="64">
+                                {% else %}
+                                    <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center border border-2 border-danger-subtle shadow-sm" style="width: 64px; height: 64px;">
+                                        <i class="bi bi-person-circle fs-2 text-muted"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold text-dark mb-0">
+                                    {% if selected_user.get_full_name %}
+                                        {{ selected_user.get_full_name }}
+                                    {% else %}
+                                        {{ selected_user.username }}
+                                    {% endif %}
+                                </h5>
+                                <p class="text-muted small mb-0">Registered Donor</p>
+                            </div>
+                        </div>
+
+                        <!-- Donor Fields Table -->
+                        <div class="table-responsive">
+                            <table class="table table-borderless align-middle mb-0">
+                                <tbody>
+                                    <tr class="border-bottom hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5" style="width: 38%;">
+                                            <i class="bi bi-droplet me-2 text-muted row-icon"></i>Blood Group
+                                        </th>
+                                        <td class="py-2.5">
+                                            {% if donor.blood_group %}
+                                                <span class="badge bg-danger text-white rounded-pill px-3 py-1 fw-bold shadow-sm">
+                                                    <i class="bi bi-droplet-fill me-1"></i>{{ donor.blood_group }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">Not Provided</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr class="border-bottom hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5">
+                                            <i class="bi bi-pie-chart me-2 text-muted row-icon"></i>Profile Completion
+                                        </th>
+                                        <td class="py-2.5">
+                                            {% if donor.profile_completion is not None %}
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress flex-grow-1" style="height: 8px;" role="progressbar" aria-valuenow="{{ donor.profile_completion }}" aria-valuemin="0" aria-valuemax="100">
+                                                        <div class="progress-bar rounded-pill {% if donor.profile_completion >= 80 %}bg-success{% elif donor.profile_completion >= 50 %}bg-info{% elif donor.profile_completion >= 25 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ donor.profile_completion }}%;"></div>
+                                                    </div>
+                                                    <span class="small fw-bold text-dark">{{ donor.profile_completion }}%</span>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">Not Provided</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr class="border-bottom hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5">
+                                            <i class="bi bi-calendar3 me-2 text-muted row-icon"></i>Age
+                                        </th>
+                                        <td class="text-dark fw-medium py-2.5">{{ donor.age|default:"Not Provided" }}</td>
+                                    </tr>
+                                    <tr class="border-bottom hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5">
+                                            <i class="bi bi-gender-ambiguous me-2 text-muted row-icon"></i>Gender
+                                        </th>
+                                        <td class="text-dark fw-medium py-2.5">{{ donor.gender|default:"Not Provided" }}</td>
+                                    </tr>
+                                    <tr class="border-bottom hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5">
+                                            <i class="bi bi-telephone me-2 text-muted row-icon"></i>Phone
+                                        </th>
+                                        <td class="text-dark fw-medium py-2.5">
+                                            {% if donor.phone %}
+                                                <a href="tel:{{ donor.phone }}" class="text-decoration-none text-dark">
+                                                    <i class="bi bi-telephone-fill text-muted me-1"></i>{{ donor.phone }}
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted">Not Provided</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr class="border-bottom hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5">
+                                            <i class="bi bi-geo-alt me-2 text-muted row-icon"></i>City / State
+                                        </th>
+                                        <td class="text-dark fw-medium py-2.5">
+                                            {% if donor.city or donor.state %}
+                                                {{ donor.city|default:"" }}{% if donor.city and donor.state %}, {% endif %}{{ donor.state|default:"" }}
+                                            {% else %}
+                                                <span class="text-muted">Not Provided</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr class="hover-row">
+                                        <th scope="row" class="text-muted fw-semibold py-2.5">
+                                            <i class="bi bi-house me-2 text-muted row-icon"></i>Address
+                                        </th>
+                                        <td class="text-dark fw-medium py-2.5">{{ donor.address|default:"Not Provided" }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <!-- Empty Donor State -->
+                        <div class="text-center py-5 h-100 d-flex flex-column justify-content-center align-items-center">
+                            <div class="rounded-circle bg-light p-3 mb-3 text-muted border border-1">
+                                <i class="bi bi-person-x display-5 text-secondary"></i>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-1">No Donor Profile</h5>
+                            <p class="text-muted mb-0 small">This user has not completed their donor profile yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BLOOD REQUEST HISTORY SECTION -->
+    <div class="card bb-card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header card-bb-header py-3 px-4 fw-bold text-uppercase fs-7 text-dark d-flex align-items-center">
+            <i class="bi bi-clipboard2-pulse-fill text-danger me-2 fs-5"></i> Blood Request History
+        </div>
+        <div class="card-body p-4">
+            <p class="text-muted mb-4">View all blood requests submitted by this user.</p>
+
+            <!-- Stat Summary Cards -->
+            <div class="row g-3 mb-4">
+                <!-- Total Requests -->
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="p-3 bg-light stat-card-modern text-center h-100 d-flex flex-column justify-content-center">
+                        <div class="text-danger mb-1 fs-4">
+                            <i class="bi bi-clipboard2-pulse-fill"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-0">{{ total_requests|default:0 }}</h4>
+                        <span class="text-muted small fw-semibold text-uppercase">Total</span>
+                    </div>
+                </div>
+
+                <!-- Pending -->
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="p-3 bg-warning-subtle border border-warning-subtle stat-card-modern text-center h-100 d-flex flex-column justify-content-center">
+                        <div class="text-warning-emphasis mb-1 fs-4">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                        <h4 class="fw-bold text-warning-emphasis mb-0">{{ pending_requests|default:0 }}</h4>
+                        <span class="text-warning-emphasis small fw-semibold text-uppercase">Pending</span>
+                    </div>
+                </div>
+
+                <!-- Approved -->
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="p-3 bg-info-subtle border border-info-subtle stat-card-modern text-center h-100 d-flex flex-column justify-content-center">
+                        <div class="text-info-emphasis mb-1 fs-4">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <h4 class="fw-bold text-info-emphasis mb-0">{{ approved_requests|default:0 }}</h4>
+                        <span class="text-info-emphasis small fw-semibold text-uppercase">Approved</span>
+                    </div>
+                </div>
+
+                <!-- Fulfilled -->
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="p-3 bg-success-subtle border border-success-subtle stat-card-modern text-center h-100 d-flex flex-column justify-content-center">
+                        <div class="text-success-emphasis mb-1 fs-4">
+                            <i class="bi bi-check2-all"></i>
+                        </div>
+                        <h4 class="fw-bold text-success-emphasis mb-0">{{ fulfilled_requests|default:0 }}</h4>
+                        <span class="text-success-emphasis small fw-semibold text-uppercase">Fulfilled</span>
+                    </div>
+                </div>
+
+                <!-- Rejected -->
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="p-3 bg-danger-subtle border border-danger-subtle stat-card-modern text-center h-100 d-flex flex-column justify-content-center">
+                        <div class="text-danger-emphasis mb-1 fs-4">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </div>
+                        <h4 class="fw-bold text-danger-emphasis mb-0">{{ rejected_requests|default:0 }}</h4>
+                        <span class="text-danger-emphasis small fw-semibold text-uppercase">Rejected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blood Request Table or Empty State -->
+            {% if blood_requests %}
+                <h6 class="fw-bold text-dark text-uppercase mb-3 fs-7">Request History</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="py-3 px-3">Requested For</th>
+                                <th scope="col" class="py-3 px-3">Patient Name</th>
+                                <th scope="col" class="py-3 px-3">Blood Group</th>
+                                <th scope="col" class="py-3 px-3">Units</th>
+                                <th scope="col" class="py-3 px-3">Hospital</th>
+                                <th scope="col" class="py-3 px-3">Urgency</th>
+                                <th scope="col" class="py-3 px-3">Required Date</th>
+                                <th scope="col" class="py-3 px-3">Status</th>
+                                <th scope="col" class="py-3 px-3">Requested On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in blood_requests %}
+                                <tr>
+                                    <!-- Requested For -->
+                                    <td class="px-3 py-3">
+                                        {% if request.request_for == 'self' %}
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 fw-bold">
+                                                <i class="bi bi-person-fill me-1"></i>Myself
+                                            </span>
+                                        {% elif request.request_for == 'other' %}
+                                            <span class="badge bg-secondary-subtle text-dark border border-secondary-subtle rounded-pill px-2.5 py-1 fw-bold">
+                                                <i class="bi bi-people-fill me-1"></i>Someone Else
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">{{ request.request_for|default:"-" }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Patient Name -->
+                                    <td class="px-3 py-3 fw-bold text-dark">
+                                        {{ request.patient_name }}
+                                    </td>
+
+                                    <!-- Blood Group -->
+                                    <td class="px-3 py-3">
+                                        <span class="badge bg-danger text-white rounded-pill px-2.5 py-1 fw-bold shadow-sm">
+                                            <i class="bi bi-droplet-fill me-1"></i>{{ request.blood_group }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Units -->
+                                    <td class="px-3 py-3 fw-medium">
+                                        {{ request.units_required }} {% if request.units_required == 1 or request.units_required == "1" %}Unit{% else %}Units{% endif %}
+                                    </td>
+
+                                    <!-- Hospital -->
+                                    <td class="px-3 py-3">
+                                        <div class="fw-medium text-dark">{{ request.hospital_name }}</div>
+                                        {% if request.city %}
+                                            <small class="text-muted d-block">{{ request.city }}</small>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Urgency -->
+                                    <td class="px-3 py-3">
+                                        {% if request.urgency|lower == 'low' %}
+                                            <span class="badge bg-secondary text-white rounded-pill px-2.5 py-1">Low</span>
+                                        {% elif request.urgency|lower == 'medium' %}
+                                            <span class="badge bg-info text-dark rounded-pill px-2.5 py-1">Medium</span>
+                                        {% elif request.urgency|lower == 'high' %}
+                                            <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1">High</span>
+                                        {% elif request.urgency|lower == 'critical' %}
+                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1 fw-bold">Critical</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary text-white rounded-pill px-2.5 py-1">{{ request.urgency }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Required Date -->
+                                    <td class="px-3 py-3 text-nowrap">
+                                        <i class="bi bi-calendar-event me-1 text-muted"></i>
+                                        {{ request.required_date|date:"M d, Y" }}
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-3 py-3">
+                                        {% if request.status|lower == 'pending' %}
+                                            <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1">
+                                                <i class="bi bi-hourglass-split me-1"></i>Pending
+                                            </span>
+                                        {% elif request.status|lower == 'approved' %}
+                                            <span class="badge bg-info text-dark rounded-pill px-2.5 py-1">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Approved
+                                            </span>
+                                        {% elif request.status|lower == 'fulfilled' %}
+                                            <span class="badge bg-success text-white rounded-pill px-2.5 py-1">
+                                                <i class="bi bi-check2-all me-1"></i>Fulfilled
+                                            </span>
+                                        {% elif request.status|lower == 'rejected' %}
+                                            <span class="badge bg-danger text-white rounded-pill px-2.5 py-1">
+                                                <i class="bi bi-x-circle-fill me-1"></i>Rejected
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary text-white rounded-pill px-2.5 py-1">{{ request.status }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Requested On -->
+                                    <td class="px-3 py-3 text-nowrap text-muted small">
+                                        {{ request.requested_on|date:"M d, Y - H:i" }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <!-- Empty Request State -->
+                <div class="text-center py-5">
+                    <div class="rounded-circle bg-light d-inline-flex p-3 mb-3 text-muted border border-1">
+                        <i class="bi bi-clipboard-x display-5 text-secondary"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">No Blood Requests</h5>
+                    <p class="text-muted mb-0">This user has not submitted any blood requests yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- SECURITY / ADMIN NOTICE -->
+    <div class="card bg-danger-subtle border border-danger-subtle rounded-4 p-3 mb-4">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0 text-danger me-3">
+                <i class="bi bi-shield-lock-fill fs-2"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold text-danger-emphasis mb-1">Protected User Information</h6>
+                <p class="text-muted small mb-0">This information is available only to authorized BloodBridge administrators. Handle user account and profile information responsibly.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="pt-2">
+        <a href="{% url 'manage_users' %}" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm d-inline-flex align-items-center btn-bb-action">
+            <i class="bi bi-arrow-left me-2"></i>Back to Manage Users
+        </a>
+    </div>
+
+</div>
+{% endblock %}
